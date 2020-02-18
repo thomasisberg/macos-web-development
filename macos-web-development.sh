@@ -18,16 +18,13 @@ do
 done
 
 
-# osx_major_version=$(sw_vers -productVersion | cut -d. -f1)
-# osx_minor_version=$(sw_vers -productVersion | cut -d. -f2)
-# osx_patch_version=$(sw_vers -productVersion | cut -d. -f3)
-# osx_patch_version=${osx_patch_version:-0}
-# osx_version=$((${osx_major_version} * 10000 + ${osx_minor_version} * 100 + ${osx_patch_version}))
-
-# native_osx_php_apache_module="LoadModule php5_module libexec\/apache2\/libphp5.so"
-# if [ "${osx_version}" -ge "101300" ]; then
-#     native_osx_php_apache_module="LoadModule php7_module libexec\/apache2\/libphp7.so"
-# fi
+DIR=$(pwd)
+PHP_VERSIONS=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
+APACHE_CONF_PATH="/usr/local/etc/httpd/httpd.conf"
+# APACHE_CONF_PATH="/private/etc/apache2/httpd.conf"
+APACHE_LOG_DIR="/var/log/apache2"
+PHP_INI_DEST="/usr/local/php/php.ini"
+PHP_LOG_DIR="/var/log/php"
 
 
 # ----------------------------------------------------------
@@ -63,6 +60,29 @@ fi
 
 
 # ----------------------------------------------------------
+# Openldap and Libiconv
+# ----------------------------------------------------------
+
+if ! [[ -n "$(brew ls --versions "openldap")" ]]; then
+    echo "Installing Openldap ..."
+    if ! $DRY_RUN; then
+        brew install openldap
+    fi
+else
+    echo "Openldap already installed."
+fi
+
+if ! [[ -n "$(brew ls --versions "libiconv")" ]]; then
+    echo "Installing Libiconv ..."
+    if ! $DRY_RUN; then
+        brew install libiconv
+    fi
+else
+    echo "Libiconv already installed."
+fi
+
+
+# ----------------------------------------------------------
 # MySQL
 # ----------------------------------------------------------
 
@@ -77,7 +97,7 @@ fi
 
 
 # ----------------------------------------------------------
-# dnsmasq
+# Dnsmasq
 # ----------------------------------------------------------
 
 if ! [ -x "$(command -v mysql)" ]; then
@@ -89,6 +109,7 @@ if ! [ -x "$(command -v mysql)" ]; then
         sudo launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
         sudo mkdir /etc/resolver
         sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
+        cd $DIR
     fi
 else
     echo "Dnsmasq already installed."
@@ -96,75 +117,80 @@ fi
 
 
 # ----------------------------------------------------------
-# Apache
+# Apache (via Homebrew)
 # ----------------------------------------------------------
 
 if ! [[ -n "$(brew ls --versions "httpd")" ]]; then
-    echo "Installing Apache (via Homebrew) ..."
+    # Prepare custom log directory.
+    echo "Preparing Apache log directory ..."
     if ! $DRY_RUN; then
-        # Prepare custom log directory.
-        sudo mkdir -p /usr/local/log/httpd
-        sudo chgrp -R staff /usr/local/log/httpd
-        sudo chmod -R ug+w /usr/local/log/httpd/
-        # Stop current Apache server.
-        echo "Stopping potentially running Apache ..."
+        sudo mkdir -p $APACHE_LOG_DIR
+        sudo chgrp -R staff $APACHE_LOG_DIR
+        sudo chmod -R ug+w $APACHE_LOG_DIR
+    fi
+    # Stop current Apache server.
+    echo "Stopping potentially running Apache ..."
+    if ! $DRY_RUN; then
         sudo apachectl stop
         sudo launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist 2>/dev/null
+    fi
+    echo "Installing Apache (via Homebrew) ..."
+    if ! $DRY_RUN; then
         brew install httpd
         brew services start httpd
     fi
-    # Modify Apache conf.
-    APACHE_CONF_PATH="/usr/local/etc/httpd/httpd.conf"
-    if ! $DRY_RUN; then
-        # Listen on port 80.
-        sudo sed -i.bak "s|^Listen ..*$|Listen 80|g" $APACHE_CONF_PATH
-        # Enable rewrite module.
-        sudo sed -i "s|^\#LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so$|LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so|g" $APACHE_CONF_PATH
-    else
-        sudo sed -n "s|^Listen ..*$|Listen 80|gp" $APACHE_CONF_PATH
-        sudo sed -n "s|^\#*LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so$|LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so|gp" $APACHE_CONF_PATH
+    APACHE_CONF_PATH_EXISTS=false
+    if [ -f "$APACHE_CONF_PATH" ]; then
+        APACHE_CONF_PATH_EXISTS=true
     fi
     # Apache User / Group.
-    read -p "Apache User [_www]: " APACHE_USER
-    APACHE_USER=${APACHE_USER:-_www}
+    read -p "Apache User [$USER]: " APACHE_USER
+    APACHE_USER=${APACHE_USER:-$USER}
     read -p "Apache Group [staff]: " APACHE_GROUP
     APACHE_GROUP=${APACHE_GROUP:-staff}
     # Apache admin e-mail
     read -p "Apache Admin e-mail [admin@example.test]: " APACHE_ADMIN_EMAIL
     APACHE_ADMIN_EMAIL=${APACHE_ADMIN_EMAIL:-admin@example.test}
-    if ! $DRY_RUN; then
-        sudo sed -i "s|^User ..*$|User $APACHE_USER|g" $APACHE_CONF_PATH
-        sudo sed -i "s|^Group ..*$|Group $APACHE_GROUP|g" $APACHE_CONF_PATH
-        sudo sed -i "s|^ServerAdmin ..*@..*\...*$|ServerAdmin $APACHE_ADMIN_EMAIL|g" $APACHE_CONF_PATH
-    else
-        sudo sed -n "s|^User ..*$|User $APACHE_USER|gp" $APACHE_CONF_PATH
-        sudo sed -n "s|^Group ..*$|Group $APACHE_GROUP|gp" $APACHE_CONF_PATH
-        sudo sed -n "s|^ServerAdmin ..*@..*\...*$|ServerAdmin $APACHE_ADMIN_EMAIL|gp" $APACHE_CONF_PATH
-    fi
     # Apache server name
     read -p "Apache Server Name [localhost]: " APACHE_SERVER_NAME
     APACHE_SERVER_NAME=${APACHE_SERVER_NAME:-localhost}
-    if ! $DRY_RUN; then
-        sudo sed -i "s|^\#*ServerName ..*$|ServerName $APACHE_SERVER_NAME|g" $APACHE_CONF_PATH
-    else
-        sudo sed -n "s|^\#*ServerName ..*$|ServerName $APACHE_SERVER_NAME|gp" $APACHE_CONF_PATH
-    fi
     # Apache document root.
     read -p "Apache Document Root [/Users/$APACHE_USER/WebServer]: " APACHE_DOC_ROOT
     APACHE_DOC_ROOT=${APACHE_DOC_ROOT:-"/Users/$APACHE_USER/WebServer"}
     apache_doc_root_regex="^DocumentRoot \"..*\"$"
-    if ! $DRY_RUN; then
-        sudo sed -i "s|$apache_doc_root_regex|DocumentRoot $APACHE_DOC_ROOT|g" $APACHE_CONF_PATH
-        sudo perl -i -0pe "s|^(DocumentRoot .*)\n<Directory ..*>|\1\n<Directory \"$APACHE_DOC_ROOT\">|mg" $APACHE_CONF_PATH
-    else
-        sudo sed -n "s|$apache_doc_root_regex|DocumentRoot \"$APACHE_DOC_ROOT\"|gp" $APACHE_CONF_PATH
-        # sudo perl -0pe "s|^(DocumentRoot .*)\n<Directory ..*>|\1\n<Directory \"$APACHE_DOC_ROOT\">|mg" $APACHE_CONF_PATH
+    # Modify Apache conf.
+    if $APACHE_CONF_PATH_EXISTS; then
+        if ! $DRY_RUN; then
+            # Listen on port 80.
+            sudo sed -i.bak "s|^Listen ..*$|Listen 80|g" $APACHE_CONF_PATH
+            # Enable rewrite module.
+            sudo sed -i "s|^\#LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so$|LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so|g" $APACHE_CONF_PATH
+            sudo sed -i "s|^User ..*$|User $APACHE_USER|g" $APACHE_CONF_PATH
+            sudo sed -i "s|^Group ..*$|Group $APACHE_GROUP|g" $APACHE_CONF_PATH
+            sudo sed -i "s|^ServerAdmin ..*@..*\...*$|ServerAdmin $APACHE_ADMIN_EMAIL|g" $APACHE_CONF_PATH
+            sudo sed -i "s|^\#*ServerName ..*$|ServerName $APACHE_SERVER_NAME|g" $APACHE_CONF_PATH
+            sudo sed -i "s|$apache_doc_root_regex|DocumentRoot $APACHE_DOC_ROOT|g" $APACHE_CONF_PATH
+            sudo perl -i -0pe "s|^(DocumentRoot .*)\n<Directory ..*>|\1\n<Directory \"$APACHE_DOC_ROOT\">|mg" $APACHE_CONF_PATH
+            # Error log.
+            sudo sed -i "s|^ErrorLog ..*|ErrorLog \"$APACHE_LOG_DIR/error_log\"|g" $APACHE_CONF_PATH
+        else
+            echo "Will change Apache config lines ..."
+            sudo sed -n "s|^Listen ..*$|Listen 80|gp" $APACHE_CONF_PATH
+            sudo sed -n "s|^\#*LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so$|LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so|gp" $APACHE_CONF_PATH
+            sudo sed -n "s|^User ..*$|User $APACHE_USER|gp" $APACHE_CONF_PATH
+            sudo sed -n "s|^Group ..*$|Group $APACHE_GROUP|gp" $APACHE_CONF_PATH
+            sudo sed -n "s|^ServerAdmin ..*@..*\...*$|ServerAdmin $APACHE_ADMIN_EMAIL|gp" $APACHE_CONF_PATH
+            sudo sed -n "s|^\#*ServerName ..*$|ServerName $APACHE_SERVER_NAME|gp" $APACHE_CONF_PATH
+            sudo sed -n "s|$apache_doc_root_regex|DocumentRoot \"$APACHE_DOC_ROOT\"|gp" $APACHE_CONF_PATH
+            # Disabled until I figure out how to print changed lines only with perl.
+            # sudo perl -0pe "s|^(DocumentRoot .*)\n<Directory ..*>|\1\n<Directory \"$APACHE_DOC_ROOT\">|mg" $APACHE_CONF_PATH
+            sudo sed -n "s|^ErrorLog ..*|ErrorLog \"$APACHE_LOG_DIR/error_log\"|gp" $APACHE_CONF_PATH
+        fi
     fi
-    # Apache error log.
+    # Restart Apache.
+    echo "Restarting Apache ..."
     if ! $DRY_RUN; then
-        sudo sed -i "s|^ErrorLog ..*|ErrorLog \"/usr/local/log/httpd/error_log\"|g" $APACHE_CONF_PATH
-    else
-        sudo sed -n "s|^ErrorLog ..*|ErrorLog \"/usr/local/log/httpd/error_log\"|gp" $APACHE_CONF_PATH
+        sudo apachectl -k restart
     fi
 else
     echo "Apache (via Homebrew) already installed."
@@ -175,8 +201,76 @@ fi
 # Server root.
 # ----------------------------------------------------------
 
-echo "Creates server root ..."
+echo "Creating server root ..."
 if ! $DRY_RUN; then
     mkdir -p "$APACHE_DOC_ROOT"
     echo "<?php phpinfo();" > "$APACHE_DOC_ROOT/index.php"
+fi
+
+
+# ----------------------------------------------------------
+# PHP
+# ----------------------------------------------------------
+
+# Prepare custom log directory.
+echo "Preparing PHP log directory ..."
+if ! $DRY_RUN; then
+    sudo mkdir -p $PHP_LOG_DIR
+    sudo chgrp -R staff $PHP_LOG_DIR
+    sudo chmod -R ug+w $PHP_LOG_DIR
+fi
+
+# Install PHP ini file.
+echo "Installing PHP ini ..."
+if ! $DRY_RUN; then
+    sudo mkdir -p /usr/local/php
+    sudo cp "$DIR/php.ini" $PHP_INI_DEST
+fi
+
+# Enable deprecated Homebrew PHP packages.
+echo "Enable deprecated Homebrew PHP packages ..."
+if ! $DRY_RUN; then
+    brew tap exolnet/homebrew-deprecated
+fi
+
+# Install PHP versions.
+for php_version in ${PHP_VERSIONS[*]}; do
+    if ! [[ -n "$(brew ls --versions "php@$php_version")" ]]; then
+        echo "Installing php$php_version ..."
+        if ! $DRY_RUN; then
+            brew install "php@$php_version"
+        fi
+    else
+        echo "php$php_version already installed."
+    fi
+    if ! $DRY_RUN; then
+        ln -s $PHP_INI_DEST "/usr/local/etc/php/$php_version/conf.d/php.ini"
+    fi
+done
+
+# Apache PHP config.
+echo "Apache PHP config ..."
+apache_php_inject='<IfModule dir_module>\n    DirectoryIndex index.php index.html\n</IfModule>\n<FilesMatch \.php\$>\n    SetHandler application/x-httpd-php\n</FilesMatch>'
+if $APACHE_CONF_PATH_EXISTS; then
+    if ! $DRY_RUN; then
+        sudo perl -i -0pe "s|^<IfModule dir_module>\n.*DirectoryIndex index.html\n</IfModule>|$apache_php_inject|mg" $APACHE_CONF_PATH
+        echo "Restarting Apache ..."
+        sudo apachectl -k restart
+    # else
+        # Disabled until I figure out how to print changed lines only with perl.
+        # sudo perl -0pe "s|^<IfModule dir_module>\n.*DirectoryIndex index.html\n</IfModule>|$apache_php_inject|mg" $APACHE_CONF_PATH
+    fi
+fi
+
+
+# Install sphp script.
+if ! [ -x "$(command -v sphp)" ]; then
+    echo "Installing sphp ..."
+    if ! $DRY_RUN; then
+        cp "$DIR/sphp.sh" /usr/local/bin/sphp
+        chmod +x /usr/local/bin/sphp
+        echo "Switch PHP version using for example 'sphp 7.2'"
+    fi
+else
+    echo "sphp already installed."
 fi
