@@ -20,8 +20,10 @@ done
 
 DIR=$(pwd)
 PHP_VERSIONS=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
-APACHE_CONF_PATH="/usr/local/etc/httpd/httpd.conf"
-# APACHE_CONF_PATH="/private/etc/apache2/httpd.conf"
+APACHE_PATH="/usr/local/etc/httpd"
+# APACHE_PATH="/private/etc/apache2"
+APACHE_PATH_CONF="$APACHE_PATH/httpd.conf"
+APACHE_PATH_VHOSTS="$APACHE_PATH/extra/httpd-vhosts.conf"
 APACHE_LOG_DIR="/var/log/apache2"
 PHP_INI_DEST="/usr/local/php/php.ini"
 PHP_LOG_DIR="/var/log/php"
@@ -139,9 +141,9 @@ if ! [[ -n "$(brew ls --versions "httpd")" ]]; then
         brew install httpd
         brew services start httpd
     fi
-    APACHE_CONF_PATH_EXISTS=false
-    if [ -f "$APACHE_CONF_PATH" ]; then
-        APACHE_CONF_PATH_EXISTS=true
+    APACHE_PATH_CONF_EXISTS=false
+    if [ -f "$APACHE_PATH_CONF" ]; then
+        APACHE_PATH_CONF_EXISTS=true
     fi
     # Apache User / Group.
     read -p "Apache User [$USER]: " APACHE_USER
@@ -159,34 +161,48 @@ if ! [[ -n "$(brew ls --versions "httpd")" ]]; then
     APACHE_DOC_ROOT=${APACHE_DOC_ROOT:-"/Users/$APACHE_USER/WebServer"}
     apache_doc_root_regex="^DocumentRoot \"..*\"$"
     # Modify Apache conf.
-    if $APACHE_CONF_PATH_EXISTS; then
+    if $APACHE_PATH_CONF_EXISTS; then
         if ! $DRY_RUN; then
             # Listen on port 80.
-            sudo sed -i.bak "s|^Listen ..*$|Listen 80|g" $APACHE_CONF_PATH
+            sudo sed -i.bak "s|^Listen ..*$|Listen 80|g" $APACHE_PATH_CONF
             # Enable rewrite module.
-            sudo sed -i "s|^\#LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so$|LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so|g" $APACHE_CONF_PATH
-            sudo sed -i "s|^User ..*$|User $APACHE_USER|g" $APACHE_CONF_PATH
-            sudo sed -i "s|^Group ..*$|Group $APACHE_GROUP|g" $APACHE_CONF_PATH
-            sudo sed -i "s|^ServerAdmin ..*@..*\...*$|ServerAdmin $APACHE_ADMIN_EMAIL|g" $APACHE_CONF_PATH
-            sudo sed -i "s|^\#*ServerName ..*$|ServerName $APACHE_SERVER_NAME|g" $APACHE_CONF_PATH
-            sudo sed -i "s|$apache_doc_root_regex|DocumentRoot $APACHE_DOC_ROOT|g" $APACHE_CONF_PATH
-            sudo perl -i -0pe "s|^(DocumentRoot .*)\n<Directory ..*>|\1\n<Directory \"$APACHE_DOC_ROOT\">|mg" $APACHE_CONF_PATH
+            sudo sed -i "s|^\#LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so$|LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so|g" $APACHE_PATH_CONF
+            sudo sed -i "s|^User ..*$|User $APACHE_USER|g" $APACHE_PATH_CONF
+            sudo sed -i "s|^Group ..*$|Group $APACHE_GROUP|g" $APACHE_PATH_CONF
+            sudo sed -i "s|^ServerAdmin ..*@..*\...*$|ServerAdmin $APACHE_ADMIN_EMAIL|g" $APACHE_PATH_CONF
+            sudo sed -i "s|^\#*ServerName ..*$|ServerName $APACHE_SERVER_NAME|g" $APACHE_PATH_CONF
+            sudo sed -i "s|$apache_doc_root_regex|DocumentRoot $APACHE_DOC_ROOT|g" $APACHE_PATH_CONF
+            sudo perl -i -0pe "s|^(DocumentRoot .*)\n<Directory ..*>|\1\n<Directory \"$APACHE_DOC_ROOT\">|mg" $APACHE_PATH_CONF
             # Error log.
-            sudo sed -i "s|^ErrorLog ..*|ErrorLog \"$APACHE_LOG_DIR/error_log\"|g" $APACHE_CONF_PATH
+            sudo sed -i "s|^ErrorLog ..*|ErrorLog \"$APACHE_LOG_DIR/error_log\"|g" $APACHE_PATH_CONF
         else
             echo "Will change Apache config lines ..."
-            sudo sed -n "s|^Listen ..*$|Listen 80|gp" $APACHE_CONF_PATH
-            sudo sed -n "s|^\#*LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so$|LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so|gp" $APACHE_CONF_PATH
-            sudo sed -n "s|^User ..*$|User $APACHE_USER|gp" $APACHE_CONF_PATH
-            sudo sed -n "s|^Group ..*$|Group $APACHE_GROUP|gp" $APACHE_CONF_PATH
-            sudo sed -n "s|^ServerAdmin ..*@..*\...*$|ServerAdmin $APACHE_ADMIN_EMAIL|gp" $APACHE_CONF_PATH
-            sudo sed -n "s|^\#*ServerName ..*$|ServerName $APACHE_SERVER_NAME|gp" $APACHE_CONF_PATH
-            sudo sed -n "s|$apache_doc_root_regex|DocumentRoot \"$APACHE_DOC_ROOT\"|gp" $APACHE_CONF_PATH
+            sudo sed -n "s|^Listen ..*$|Listen 80|gp" $APACHE_PATH_CONF
+            sudo sed -n "s|^\#*LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so$|LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so|gp" $APACHE_PATH_CONF
+            sudo sed -n "s|^User ..*$|User $APACHE_USER|gp" $APACHE_PATH_CONF
+            sudo sed -n "s|^Group ..*$|Group $APACHE_GROUP|gp" $APACHE_PATH_CONF
+            sudo sed -n "s|^ServerAdmin ..*@..*\...*$|ServerAdmin $APACHE_ADMIN_EMAIL|gp" $APACHE_PATH_CONF
+            sudo sed -n "s|^\#*ServerName ..*$|ServerName $APACHE_SERVER_NAME|gp" $APACHE_PATH_CONF
+            sudo sed -n "s|$apache_doc_root_regex|DocumentRoot \"$APACHE_DOC_ROOT\"|gp" $APACHE_PATH_CONF
             # Disabled until I figure out how to print changed lines only with perl.
-            # sudo perl -0pe "s|^(DocumentRoot .*)\n<Directory ..*>|\1\n<Directory \"$APACHE_DOC_ROOT\">|mg" $APACHE_CONF_PATH
-            sudo sed -n "s|^ErrorLog ..*|ErrorLog \"$APACHE_LOG_DIR/error_log\"|gp" $APACHE_CONF_PATH
+            # sudo perl -0pe "s|^(DocumentRoot .*)\n<Directory ..*>|\1\n<Directory \"$APACHE_DOC_ROOT\">|mg" $APACHE_PATH_CONF
+            sudo sed -n "s|^ErrorLog ..*|ErrorLog \"$APACHE_LOG_DIR/error_log\"|gp" $APACHE_PATH_CONF
         fi
     fi
+
+    # Setup virtual hosts.
+    echo "Installing Apache vhosts configuration ..."
+    if ! $DRY_RUN; then
+        apache_vhosts=$(<httpd-vhosts.conf)
+        apache_vhosts="${apache_vhosts//\{APACHE_DOC_ROOT\}/$APACHE_DOC_ROOT}"
+        APACHE_PATH_VHOSTS_BACKUP="$APACHE_PATH_VHOSTS.bak"
+        if ! [ -f "$APACHE_PATH_VHOSTS_BACKUP" ]; then
+            echo "Moved current Apache vhosts configuration to $APACHE_PATH_VHOSTS_BACKUP"
+            sudo cp $APACHE_PATH_VHOSTS $APACHE_PATH_VHOSTS_BACKUP
+        fi
+        echo "$apache_vhosts" | sudo tee $APACHE_PATH_VHOSTS > /dev/null
+    fi
+    
     # Restart Apache.
     echo "Restarting Apache ..."
     if ! $DRY_RUN; then
@@ -251,14 +267,14 @@ done
 # Apache PHP config.
 echo "Apache PHP config ..."
 apache_php_inject='<IfModule dir_module>\n    DirectoryIndex index.php index.html\n</IfModule>\n<FilesMatch \.php\$>\n    SetHandler application/x-httpd-php\n</FilesMatch>'
-if $APACHE_CONF_PATH_EXISTS; then
+if $APACHE_PATH_CONF_EXISTS; then
     if ! $DRY_RUN; then
-        sudo perl -i -0pe "s|^<IfModule dir_module>\n.*DirectoryIndex index.html\n</IfModule>|$apache_php_inject|mg" $APACHE_CONF_PATH
+        sudo perl -i -0pe "s|^<IfModule dir_module>\n.*DirectoryIndex index.html\n</IfModule>|$apache_php_inject|mg" $APACHE_PATH_CONF
         echo "Restarting Apache ..."
         sudo apachectl -k restart
     # else
         # Disabled until I figure out how to print changed lines only with perl.
-        # sudo perl -0pe "s|^<IfModule dir_module>\n.*DirectoryIndex index.html\n</IfModule>|$apache_php_inject|mg" $APACHE_CONF_PATH
+        # sudo perl -0pe "s|^<IfModule dir_module>\n.*DirectoryIndex index.html\n</IfModule>|$apache_php_inject|mg" $APACHE_PATH_CONF
     fi
 fi
 
