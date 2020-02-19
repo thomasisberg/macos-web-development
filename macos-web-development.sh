@@ -333,11 +333,16 @@ if ! $DRY_RUN; then
 fi
 
 # Install PHP ini file.
-echo -e "${C_1}Installing PHP ini ...${C_0}"
-if ! $DRY_RUN; then
-    sudo mkdir -p /usr/local/php
-    sudo cp "$DIR/php.ini" $PHP_INI_DEST
+if ! [ -f "$PHP_INI_DEST" ]; then
+    echo -e "${C_1}Installing PHP ini ...${C_0}"
+    if ! $DRY_RUN; then
+        sudo mkdir -p /usr/local/php
+        sudo cp "$DIR/php.ini" $PHP_INI_DEST
+    fi
+else
+    echo -e "${C_2}PHP ini already installed. Will not overwrite.${C_0}"
 fi
+
 
 # Enable deprecated Homebrew PHP packages.
 echo -e "${C_1}Enable deprecated Homebrew PHP packages ...${C_0}"
