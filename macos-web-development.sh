@@ -219,6 +219,7 @@ fi
 # Apache (via Homebrew)
 # ----------------------------------------------------------
 
+APACHE_INSTALLED=false
 if ! [[ -n "$(brew ls --versions "httpd")" ]]; then
     # Prepare custom log directory.
     echo -e "${C_1}Preparing Apache log directory ...${C_0}"
@@ -238,6 +239,7 @@ if ! [[ -n "$(brew ls --versions "httpd")" ]]; then
         brew install httpd
         brew services start httpd
     fi
+    $APACHE_INSTALLED=true
     APACHE_PATH_CONF_EXISTS=false
     if [ -f "$APACHE_PATH_CONF" ]; then
         APACHE_PATH_CONF_EXISTS=true
@@ -305,20 +307,16 @@ if ! [[ -n "$(brew ls --versions "httpd")" ]]; then
     if ! $DRY_RUN; then
         sudo apachectl -k restart
     fi
+
+    # Server root.
+    echo -e "${C_1}Creating server root ...${C_0}"
+    if ! $DRY_RUN; then
+        mkdir -p "$APACHE_DOC_ROOT"
+        echo "<?php phpinfo();" > "$APACHE_DOC_ROOT/index.php"
+    fi
 else
     echo -e "${C_2}Apache (via Homebrew) already installed.${C_0}"
     APACHE_DOC_ROOT=$(sed -n "s|DocumentRoot \"\(.*\)\"|\1|gp" $APACHE_PATH_CONF)
-fi
-
-
-# ----------------------------------------------------------
-# Server root.
-# ----------------------------------------------------------
-
-echo -e "${C_1}Creating server root ...${C_0}"
-if ! $DRY_RUN; then
-    mkdir -p "$APACHE_DOC_ROOT"
-    echo "<?php phpinfo();" > "$APACHE_DOC_ROOT/index.php"
 fi
 
 
@@ -395,9 +393,11 @@ echo ""
 if ! $DRY_RUN; then
     echo -e "${C_EM}Done!${C_0}"
     echo ""
-    echo -e "${C_GOOD}You should now be able to browse ${C_INFO}http://{any}.test${C_GOOD} to visit ${C_INFO}$APACHE_DOC_ROOT/sites/{any}/public${C_GOOD}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_GOOD}.${C_0}"
-    echo ""
-    echo -e "${C_GOOD}Next: you should enable a PHP version by running ${C_0}sphp 7.2${C_GOOD} (or your version of choice).${C_0}"
+    if $APACHE_INSTALLED; then
+        echo -e "${C_GOOD}You should now be able to browse ${C_INFO}http://{any}.test${C_GOOD} to visit ${C_INFO}$APACHE_DOC_ROOT/sites/{any}/public${C_GOOD}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_GOOD}.${C_0}"
+        echo ""
+    fi
+    echo -e "${C_GOOD}Next: you should enable a PHP version by running ${C_0}sphp 7.2${C_GOOD} (use desired version).${C_0}"
 else
     echo -e "${C_GOOD}Did nothing since script defaults to dry run. Use ${C_INFO}--no-dry-run${C_GOOD} to actually do stuff.${C_0}"
     echo -e "${C_GOOD}See ${C_INFO}--help${C_GOOD} for all options.${C_0}"
