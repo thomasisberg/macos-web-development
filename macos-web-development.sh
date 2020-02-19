@@ -108,6 +108,7 @@ APACHE_LOG_DIR="/var/log/apache2"
 PHP_INI_DEST="/usr/local/php/php.ini"
 PHP_LOG_DIR="/var/log/php"
 
+
 # Create list of PHP versions, based on options.
 ALL_PHP_VERSIONS=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 ALL_PHP_FLAGS=($PHP_5_6 $PHP_7_0 $PHP_7_1 $PHP_7_2 $PHP_7_3 $PHP_7_4)
@@ -126,7 +127,7 @@ done
 
 echo -e "${C_1}Acquire sudo ...${C_0}"
 sudo echo "" > /dev/null
-echo -e "${C_INFO}Hello Sudoer!${C_0}"
+echo -e "${C_EM}Hello Sudoer!${C_0}"
 
 
 # ----------------------------------------------------------
@@ -306,6 +307,7 @@ if ! [[ -n "$(brew ls --versions "httpd")" ]]; then
     fi
 else
     echo -e "${C_2}Apache (via Homebrew) already installed.${C_0}"
+    APACHE_DOC_ROOT=$(sed -n "s|DocumentRoot \"\(.*\)\"|\1|gp" $APACHE_PATH_CONF)
 fi
 
 
@@ -381,7 +383,7 @@ if ! [ -x "$(command -v sphp)" ]; then
     if ! $DRY_RUN; then
         cp "$DIR/sphp.sh" /usr/local/bin/sphp
         chmod +x /usr/local/bin/sphp
-        echo -e "${C_INFO}Switch PHP version using for example 'sphp 7.2'${C_0}"
+        echo -e "${C_EM}Switch PHP version using for example ${C_0}sphp 7.2"
     fi
 else
     echo -e "${C_2}sphp already installed.${C_0}"
@@ -391,7 +393,11 @@ fi
 # Finish.
 echo ""
 if ! $DRY_RUN; then
-    echo -e "${C_GOOD}Done!${C_0}"
+    echo -e "${C_EM}Done!${C_0}"
+    echo ""
+    echo -e "${C_GOOD}You should now be able to browse ${C_INFO}http://{any}.test${C_GOOD} to visit ${C_INFO}$APACHE_DOC_ROOT/sites/{any}/public${C_GOOD}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_GOOD}.${C_0}"
+    echo ""
+    echo -e "${C_GOOD}Next: you should enable a PHP version by running ${C_0}sphp 7.2${C_GOOD} (or your version of choice).${C_0}"
 else
     echo -e "${C_GOOD}Did nothing since script defaults to dry run. Use ${C_INFO}--no-dry-run${C_GOOD} to actually do stuff.${C_0}"
     echo -e "${C_GOOD}See ${C_INFO}--help${C_GOOD} for all options.${C_0}"
