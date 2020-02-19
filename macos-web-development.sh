@@ -239,7 +239,7 @@ if ! [[ -n "$(brew ls --versions "httpd")" ]]; then
         brew install httpd
         brew services start httpd
     fi
-    $APACHE_INSTALLED=true
+    APACHE_INSTALLED=true
     APACHE_PATH_CONF_EXISTS=false
     if [ -f "$APACHE_PATH_CONF" ]; then
         APACHE_PATH_CONF_EXISTS=true
