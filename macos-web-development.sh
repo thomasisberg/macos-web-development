@@ -360,8 +360,14 @@ for php_version in ${PHP_VERSIONS[*]}; do
     else
         echo -e "${C_2}php$php_version already installed.${C_0}"
     fi
-    if ! $DRY_RUN; then
-        ln -s $PHP_INI_DEST "/usr/local/etc/php/$php_version/conf.d/php.ini"
+    PHP_VERSION_INI_PATH="/usr/local/etc/php/$php_version/conf.d/php.ini"
+    if ! [ -f "$PHP_VERSION_INI_PATH" ]; then
+        echo -e "${C_2}Installing PHP ini for php$php_version ...${C_0}"
+        if ! $DRY_RUN; then
+            ln -s $PHP_INI_DEST "$PHP_VERSION_INI_PATH"
+        fi
+    else
+        echo -e "${C_2}PHP ini for php$php_version already installed. Will not overwrite.${C_0}"
     fi
 done
 
