@@ -4,7 +4,7 @@
 
 Installs MacOS web development stuff:
 - Xcode
-- Homebrw
+- Homebrew
 - Openldap and Libiconv
 - MySQL
 - Dnsmasq
