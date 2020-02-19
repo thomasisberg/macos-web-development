@@ -1,6 +1,4 @@
-# scripts
-
-## macos-web-development.sh
+# macos-web-development
 
 Installs MacOS web development stuff:
 - Xcode
