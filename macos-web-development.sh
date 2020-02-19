@@ -105,7 +105,7 @@ APACHE_PATH="/usr/local/etc/httpd"
 APACHE_PATH_CONF="$APACHE_PATH/httpd.conf"
 APACHE_PATH_VHOSTS="$APACHE_PATH/extra/httpd-vhosts.conf"
 APACHE_LOG_DIR="/var/log/apache2"
-PHP_INI_DEST="/usr/local/php/php.ini"
+PHP_INI_DEST="/usr/local/php/macos-web-development.ini"
 PHP_LOG_DIR="/var/log/php"
 
 
@@ -362,7 +362,7 @@ for php_version in ${PHP_VERSIONS[*]}; do
     fi
     PHP_VERSION_INI_PATH="/usr/local/etc/php/$php_version/conf.d/php.ini"
     if ! [ -f "$PHP_VERSION_INI_PATH" ]; then
-        echo -e "${C_2}Installing PHP ini for php$php_version ...${C_0}"
+        echo -e "${C_1}Installing PHP ini for php$php_version ...${C_0}"
         if ! $DRY_RUN; then
             ln -s $PHP_INI_DEST "$PHP_VERSION_INI_PATH"
         fi
@@ -408,7 +408,7 @@ if ! $DRY_RUN; then
         echo -e "${C_GOOD}You should now be able to browse ${C_INFO}http://{any}.test${C_GOOD} to visit ${C_INFO}$APACHE_DOC_ROOT/sites/{any}/public${C_GOOD}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_GOOD}.${C_0}"
         echo ""
     fi
-    echo -e "${C_GOOD}Next: you should enable a PHP version by running ${C_0}sphp 7.2${C_GOOD} (use desired version).${C_0}"
+    echo -e "${C_GOOD}Next: if you haven't already, you should enable a PHP version by running ${C_0}sphp 7.2${C_GOOD} (use desired version).${C_0}"
 else
     echo -e "${C_GOOD}Did nothing since script defaults to dry run. Use ${C_INFO}--no-dry-run${C_GOOD} to actually do stuff.${C_0}"
     echo -e "${C_GOOD}See ${C_INFO}--help${C_GOOD} for all options.${C_0}"
