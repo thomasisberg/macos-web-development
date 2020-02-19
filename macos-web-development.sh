@@ -105,7 +105,7 @@ APACHE_PATH="/usr/local/etc/httpd"
 APACHE_PATH_CONF="$APACHE_PATH/httpd.conf"
 APACHE_PATH_VHOSTS="$APACHE_PATH/extra/httpd-vhosts.conf"
 APACHE_LOG_DIR="/var/log/apache2"
-PHP_INI_DEST="/usr/local/php/macos-web-development.ini"
+PHP_INI_DEST="/usr/local/php/php.ini"
 PHP_LOG_DIR="/var/log/php"
 
 
@@ -360,7 +360,7 @@ for php_version in ${PHP_VERSIONS[*]}; do
     else
         echo -e "${C_2}php$php_version already installed.${C_0}"
     fi
-    PHP_VERSION_INI_PATH="/usr/local/etc/php/$php_version/conf.d/php.ini"
+    PHP_VERSION_INI_PATH="/usr/local/etc/php/$php_version/conf.d/macos-web-development.ini"
     if ! [ -f "$PHP_VERSION_INI_PATH" ]; then
         echo -e "${C_1}Installing PHP ini for php$php_version ...${C_0}"
         if ! $DRY_RUN; then
