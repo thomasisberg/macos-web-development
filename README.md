@@ -53,9 +53,9 @@ The following software is included in a full installation.
 - **Libiconv**
 - **MySQL**
 - **Dnsmasq**
-- **Apache (via Homebrew)**
-- **PHP versions 5.6 to 7.4 (optional)**
-- **sphp – a PHP switcher script**
+- **Apache** (via Homebrew)
+- **PHP** versions 5.6 to 7.4 (optional)
+- **sphp** a PHP switcher script
 
 
 ## Credit
