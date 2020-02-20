@@ -36,7 +36,7 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 ```
 
 
-#### Uninstall
+#### Uninstallation
 
 Maybe you're poking around with your computer and want to *uninstall... install... uninstall... install...* 😎
 
