@@ -12,9 +12,10 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 - Defaults to dry run – see what the script will do before actually doing it.
 - Uninstall. Don't know when you would use this, but hey, it's a free world. 😀
 
-### Apache vhosts configuration
+### Apache configuration
 
 After installation the Apache vhosts configuration is found at `/usr/local/etc/httpd/extra/`. Change it whenever you want and restart Apache using `sudo apachectl -k restart`.
+
 
 ### PHP ini
 
