@@ -28,7 +28,7 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 ./macos-web-development.sh --no-dry-run
 ```
 
-Then browse http://localhost, or add http://cool.test something like this:
+Then browse http://localhost, or http://cool.test after creating it:
 
 ```bash
 mkdir -p ~/WebServer/sites/cool/public && echo "<h1>Cool</h1>" >> ~/WebServer/sites/cool/public/index.html
