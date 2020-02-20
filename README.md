@@ -13,6 +13,36 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 - Uninstall. Don't know when you would use this, but hey, it's a free world.
 
 
+## Usage
+
+#### Full installation (dry run)
+
+```bash
+./macos-web-development.sh
+```
+
+
+#### Full installation
+
+```bash
+./macos-web-development.sh --no-dry-run
+```
+
+
+#### Installation with selected versions of PHP and no MySQL
+
+```bash
+./macos-web-development.sh --no-php-5-6 --no-php-7-0 --no-php-7-4 --no-mysql --no-dry-run
+```
+
+
+#### See the help for all details.
+
+```bash
+./macos-web-development.sh --help
+```
+
+
 ## Installed software
 
 The following software is included in a full installation.
@@ -26,29 +56,6 @@ The following software is included in a full installation.
 - Apache (via Homebrew)
 - PHP versions 5.6 to 7.4 (optional)
 - sphp – a PHP switcher script
-
-
-## Usage
-
-Full installation (dry run)
-
-```bash
-./macos-web-development.sh
-```
-
-
-Full installation
-
-```bash
-./macos-web-development.sh --no-dry-run
-```
-
-
-See the help for details.
-
-```bash
-./macos-web-development.sh --help
-```
 
 
 ## Credit
