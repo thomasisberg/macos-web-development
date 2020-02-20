@@ -15,7 +15,7 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 
 ## Usage
 
-#### Full installation (dry run)
+#### Full installation (dry run with info)
 
 ```bash
 ./macos-web-development.sh
