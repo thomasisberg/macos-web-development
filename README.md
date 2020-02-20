@@ -47,7 +47,7 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 
 The following software is included in a full installation.
 
-- xcode-select – Xcode command line developer tools
+- xcode-select – Xcode command line developer tools. You probably already have this – feel free to pas `--no-xcode-select`.
 - Homebrew
 - Openldap
 - Libiconv
