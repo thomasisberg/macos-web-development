@@ -10,7 +10,7 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 - Distributes Apache vhosts configuraton and PHP ini from example files in repository. Simply adjust them before installation.
 - Only install desired software (Apache, MySQL, PHP etc) by opting out.
 - Defaults to dry run – see what the script will do before actually doing it.
-- Uninstall. Don't know when you would use this, but hey, it's a free world.
+- Uninstall. Don't know when you would use this, but hey, it's a free world. 😀
 
 
 ## Usage
@@ -33,6 +33,15 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 
 ```bash
 ./macos-web-development.sh --no-php-5-6 --no-php-7-0 --no-php-7-4 --no-mysql --no-dry-run
+```
+
+
+#### Uninstall
+
+Maybe you're poking around with your computer and want to uninstall... install... uninstall... install... 😎
+
+```bash
+./macos-web-development.sh --uninstall --no-dry-run
 ```
 
 
