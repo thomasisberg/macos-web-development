@@ -1,7 +1,7 @@
 #!/bin/bash
 # Creator: Phil Cook
 # Modified: Andy Miller
-# Small tweak: Thomas Isberg (adding php version module in APache conf after rewrite_module instead of php5_module or php7_module, which didn't exist).
+# Small tweak: Thomas Isberg (adding php version module in Apache conf after rewrite_module instead of php5_module or php7_module, which didn't exist).
 osx_major_version=$(sw_vers -productVersion | cut -d. -f1)
 osx_minor_version=$(sw_vers -productVersion | cut -d. -f2)
 osx_patch_version=$(sw_vers -productVersion | cut -d. -f3)
