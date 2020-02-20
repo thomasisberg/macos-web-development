@@ -120,6 +120,13 @@ for i in "${!ALL_PHP_FLAGS[@]}"; do
 done
 
 
+echo ""
+if $DRY_RUN; then
+    echo -e "${C_EM}Cool down – this is a dry run. Nothing will actually be installed.${C_0}"
+    echo ""
+fi
+
+
 # ----------------------------------------------------------
 # Sudo
 # ----------------------------------------------------------
@@ -156,12 +163,19 @@ else
     echo -e "${C_2}Homebrew already installed.${C_0}"
 fi
 
+HAS_BREW=false
+if [ -x "$(command -v brew)" ]; then
+    HAS_BREW=true
+fi
+
 
 # ----------------------------------------------------------
 # Openldap and Libiconv
 # ----------------------------------------------------------
 
-if ! [[ -n "$(brew ls --versions "openldap")" ]]; then
+if ! $HAS_BREW; then
+    echo -e "${C_1}Would look for Openldap if Homebrew was actually installed.${C_0}"
+elif ! [[ -n "$(brew ls --versions "openldap")" ]]; then
     echo -e "${C_1}Installing Openldap ...${C_0}"
     if ! $DRY_RUN; then
         brew install openldap
@@ -170,7 +184,9 @@ else
     echo -e "${C_2}Openldap already installed.${C_0}"
 fi
 
-if ! [[ -n "$(brew ls --versions "libiconv")" ]]; then
+if ! $HAS_BREW; then
+    echo -e "${C_1}Would look for Libiconv if Homebrew was actually installed.${C_0}"
+elif ! [[ -n "$(brew ls --versions "libiconv")" ]]; then
     echo -e "${C_1}Installing Libiconv ...${C_0}"
     if ! $DRY_RUN; then
         brew install libiconv
@@ -219,7 +235,9 @@ fi
 # ----------------------------------------------------------
 
 APACHE_INSTALLED=false
-if ! [[ -n "$(brew ls --versions "httpd")" ]]; then
+if ! $HAS_BREW; then
+    echo -e "${C_1}Would look for Apache if Homebrew was actually installed.${C_0}"
+elif ! [[ -n "$(brew ls --versions "httpd")" ]]; then
     # Prepare custom log directory.
     echo -e "${C_1}Preparing Apache log directory ...${C_0}"
     if ! $DRY_RUN; then
@@ -344,14 +362,20 @@ fi
 
 
 # Enable deprecated Homebrew PHP packages.
-echo -e "${C_1}Enable deprecated Homebrew PHP packages ...${C_0}"
-if ! $DRY_RUN; then
-    brew tap exolnet/homebrew-deprecated
+if ! $HAS_BREW; then
+    echo -e "${C_1}Would enable deprecated Homebrew PHP packages if Homebrew was actually installed.${C_0}"
+else
+    echo -e "${C_1}Enable deprecated Homebrew PHP packages ...${C_0}"
+    if ! $DRY_RUN; then
+        brew tap exolnet/homebrew-deprecated
+    fi
 fi
 
 # Install PHP versions.
 for php_version in ${PHP_VERSIONS[*]}; do
-    if ! [[ -n "$(brew ls --versions "php@$php_version")" ]]; then
+    if ! $HAS_BREW; then
+        echo -e "${C_1}Would install php$php_version if Homebrew was actually installed.${C_0}"
+    elif ! [[ -n "$(brew ls --versions "php@$php_version")" ]]; then
         echo -e "${C_1}Installing php$php_version ...${C_0}"
         if ! $DRY_RUN; then
             brew install "php@$php_version"
