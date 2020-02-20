@@ -252,7 +252,7 @@ elif ! [[ -n "$(brew ls --versions "httpd")" ]]; then
     # Stop current Apache server.
     echo -e "${C_1}Stopping potentially running Apache ...${C_0}"
     if ! $DRY_RUN; then
-        sudo apachectl stop
+        sudo apachectl -k stop
         sudo launchctl unload -w /System/Library/LaunchDaemons/org.apache.httpd.plist 2>/dev/null
     fi
     echo -e "${C_1}Installing Apache (via Homebrew) ...${C_0}"
@@ -277,8 +277,8 @@ elif ! [[ -n "$(brew ls --versions "httpd")" ]]; then
     read -p "Apache Server Name [localhost]: " APACHE_SERVER_NAME
     APACHE_SERVER_NAME=${APACHE_SERVER_NAME:-localhost}
     # Apache document root.
-    read -p "Apache Document Root [/Users/$APACHE_USER/WebServer]: " APACHE_DOC_ROOT
-    APACHE_DOC_ROOT=${APACHE_DOC_ROOT:-"/Users/$APACHE_USER/WebServer"}
+    read -p "Apache Document Root [/Users/$APACHE_USER/WebServer/sites]: " APACHE_DOC_ROOT
+    APACHE_DOC_ROOT=${APACHE_DOC_ROOT:-"/Users/$APACHE_USER/WebServer/sites"}
     APACHE_DOC_ROOT_REGEX="^DocumentRoot \"..*\"$"
     # Modify Apache conf.
     if $APACHE_PATH_CONF_EXISTS; then
@@ -286,15 +286,15 @@ elif ! [[ -n "$(brew ls --versions "httpd")" ]]; then
             # Listen on port 80.
             sudo sed -i.bak "s|^Listen ..*$|Listen 80|g" $APACHE_PATH_CONF
             # Enable rewrite module.
-            sudo sed -i "s|^\#LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so$|LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so|g" $APACHE_PATH_CONF
-            sudo sed -i "s|^User ..*$|User $APACHE_USER|g" $APACHE_PATH_CONF
-            sudo sed -i "s|^Group ..*$|Group $APACHE_GROUP|g" $APACHE_PATH_CONF
-            sudo sed -i "s|^ServerAdmin ..*@..*\...*$|ServerAdmin $APACHE_ADMIN_EMAIL|g" $APACHE_PATH_CONF
-            sudo sed -i "s|^\#*ServerName ..*$|ServerName $APACHE_SERVER_NAME|g" $APACHE_PATH_CONF
-            sudo sed -i "s|$APACHE_DOC_ROOT_REGEX|DocumentRoot $APACHE_DOC_ROOT|g" $APACHE_PATH_CONF
-            sudo perl -i -0pe "s|^(DocumentRoot .*)\n<Directory ..*>|\1\n<Directory \"$APACHE_DOC_ROOT\">|mg" $APACHE_PATH_CONF
+            sudo sed -i.bak "s|^\#LoadModule rewrite_module \(.*\)$|LoadModule rewrite_module \1|g" $APACHE_PATH_CONF
+            sudo sed -i.bak "s|^User ..*$|User $APACHE_USER|g" $APACHE_PATH_CONF
+            sudo sed -i.bak "s|^Group ..*$|Group $APACHE_GROUP|g" $APACHE_PATH_CONF
+            sudo sed -i.bak "s|^ServerAdmin ..*@..*\...*$|ServerAdmin $APACHE_ADMIN_EMAIL|g" $APACHE_PATH_CONF
+            sudo sed -i.bak "s|^\#*ServerName ..*$|ServerName $APACHE_SERVER_NAME|g" $APACHE_PATH_CONF
+            sudo sed -i.bak "s|$APACHE_DOC_ROOT_REGEX|DocumentRoot $APACHE_DOC_ROOT|g" $APACHE_PATH_CONF
+            sudo perl -i.bak -0pe "s|^(DocumentRoot .*)\n<Directory ..*>|\1\n<Directory \"$APACHE_DOC_ROOT\">|mg" $APACHE_PATH_CONF
             # Error log.
-            sudo sed -i "s|^ErrorLog ..*|ErrorLog \"$APACHE_LOG_DIR/error_log\"|g" $APACHE_PATH_CONF
+            sudo sed -i.bak "s|^ErrorLog ..*|ErrorLog \"$APACHE_LOG_DIR/error_log\"|g" $APACHE_PATH_CONF
         else
             echo "Will change Apache config lines ..."
             sudo sed -n "s|^Listen ..*$|Listen 80|gp" $APACHE_PATH_CONF
@@ -313,12 +313,12 @@ elif ! [[ -n "$(brew ls --versions "httpd")" ]]; then
     # Setup virtual hosts.
     echo -e "${C_1}Installing Apache vhosts configuration ...${C_0}"
     if ! $DRY_RUN; then
-        APACHE_VHOSTS=$(<httpd-vhosts.conf)
+        APACHE_VHOSTS=$(<"$DIR/httpd-vhosts.conf")
         APACHE_VHOSTS="${APACHE_VHOSTS//\{APACHE_DOC_ROOT\}/$APACHE_DOC_ROOT}"
         APACHE_PATH_VHOSTS_BACKUP="$APACHE_PATH_VHOSTS.bak"
         if ! [ -f "$APACHE_PATH_VHOSTS_BACKUP" ]; then
-            echo "Moved current Apache vhosts configuration to $APACHE_PATH_VHOSTS_BACKUP"
-            sudo cp $APACHE_PATH_VHOSTS $APACHE_PATH_VHOSTS_BACKUP
+            echo -e "${C_INFO}Moving current Apache vhosts configuration to $APACHE_PATH_VHOSTS_BACKUP ...${C_0}"
+            cp $APACHE_PATH_VHOSTS $APACHE_PATH_VHOSTS_BACKUP
         fi
         echo "$APACHE_VHOSTS" | sudo tee $APACHE_PATH_VHOSTS > /dev/null
     fi
@@ -387,10 +387,14 @@ for php_version in ${PHP_VERSIONS[*]}; do
     else
         echo -e "${C_2}php$php_version already installed.${C_0}"
     fi
-    PHP_VERSION_INI_PATH="/usr/local/etc/php/$php_version/conf.d/macos-web-development.ini"
+    PHP_VERSION_INI_DIR="/usr/local/etc/php/$php_version/conf.d"
+    PHP_VERSION_INI_PATH="$PHP_VERSION_INI_DIR/macos-web-development.ini"
     if ! [ -f "$PHP_VERSION_INI_PATH" ]; then
         echo -e "${C_1}Installing PHP ini for php$php_version ...${C_0}"
         if ! $DRY_RUN; then
+            if ! [ -d "$PHP_VERSION_INI_DIR" ]; then
+                mkdir "$PHP_VERSION_INI_DIR"
+            fi
             ln -s $PHP_INI_DEST "$PHP_VERSION_INI_PATH"
         fi
     else
@@ -404,7 +408,7 @@ APACHE_PHP_INJECT='<IfModule dir_module>\n    DirectoryIndex index.php index.htm
 if $APACHE_PATH_CONF_EXISTS; then
     if ! $DRY_RUN; then
         sudo perl -i -0pe "s|^<IfModule dir_module>\n.*DirectoryIndex index.html\n</IfModule>|$APACHE_PHP_INJECT|mg" $APACHE_PATH_CONF
-        echo -e "${C_2}Restarting Apache ...${C_0}"
+        echo -e "${C_1}Restarting Apache ...${C_0}"
         sudo apachectl -k restart
     # else
         # Disabled until I figure out how to print changed lines only with perl.
@@ -432,7 +436,7 @@ if ! $DRY_RUN; then
     echo -e "${C_EM}Done!${C_0}"
     echo ""
     if $APACHE_INSTALLED; then
-        echo -e "${C_GOOD}You should now be able to browse ${C_INFO}http://{any}.test${C_GOOD} to visit ${C_INFO}$APACHE_DOC_ROOT/sites/{any}/public${C_GOOD}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_GOOD}.${C_0}"
+        echo -e "${C_GOOD}You should now be able to browse ${C_INFO}http://{any}.test${C_GOOD} to visit ${C_INFO}$APACHE_DOC_ROOT/{any}/public${C_GOOD}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_GOOD}.${C_0}"
         echo ""
     fi
     echo -e "${C_GOOD}Next: if you haven't already, you should enable a PHP version by running ${C_0}sphp 7.2${C_GOOD} (use desired version).${C_0}"
