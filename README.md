@@ -3,7 +3,8 @@
 Installs MacOS web development stuff:
 - xcode-select – Xcode command line developer tools
 - Homebrew
-- Openldap and Libiconv
+- Openldap
+- Libiconv
 - MySQL
 - Dnsmasq
 - Apache (via Homebrew)
