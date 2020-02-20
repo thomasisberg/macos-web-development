@@ -139,14 +139,14 @@ if [[ " ${php_array[*]} " == *"$php_version"* ]]; then
                     fi
                 # Else the string for the php module is not in the apache config then add it
                 else
-                    sudo sed -i.bak "/LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so/a\\
+                    sudo sed -i.bak "/LoadModule rewrite_module lib\/httpd\/modules\/mod_rewrite.so/a\\
 $comment_apache_module_string\\
 " $apache_conf_path
                 fi
             done
             sudo sed -i.bak "s/\#LoadModule $php_module $apache_php_mod_path/LoadModule $php_module $apache_php_mod_path/g" $apache_conf_path
             echo "Restarting apache"
-            sudo apachectl restart
+            sudo apachectl -k restart
         fi
 
         # Switch valet

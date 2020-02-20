@@ -24,6 +24,8 @@ PHP_7_1=true
 PHP_7_2=true
 PHP_7_3=true
 PHP_7_4=true
+PHP_ENABLE=true
+UNINSTALL=false
 
 while test $# != 0
 do
@@ -37,6 +39,8 @@ do
     --no-php-7-2) PHP_7_2=false ;;
     --no-php-7-3) PHP_7_3=false ;;
     --no-php-7-4) PHP_7_4=false ;;
+    --no-php-enable) PHP_ENABLE=false ;;
+    --uninstall) UNINSTALL=true ;;
     esac
     shift
 done
@@ -105,7 +109,8 @@ APACHE_PATH="/usr/local/etc/httpd"
 APACHE_PATH_CONF="$APACHE_PATH/httpd.conf"
 APACHE_PATH_VHOSTS="$APACHE_PATH/extra/httpd-vhosts.conf"
 APACHE_LOG_DIR="/var/log/apache2"
-PHP_INI_DEST="/usr/local/php/php.ini"
+PHP_INI_DIR="/usr/local/php"
+PHP_INI_DEST="$PHP_INI_DIR/php.ini"
 PHP_LOG_DIR="/var/log/php"
 
 
@@ -118,6 +123,10 @@ for i in "${!ALL_PHP_FLAGS[@]}"; do
         PHP_VERSIONS+=("${ALL_PHP_VERSIONS[$i]}")
     fi
 done
+NUM_PHP_VERSIONS=${#PHP_VERSIONS[@]}
+if [ $NUM_PHP_VERSIONS -gt 0 ]; then
+    LATEST_PHP_VERSION="${PHP_VERSIONS[$NUM_PHP_VERSIONS-1]}"
+fi
 
 
 # ----------------------------------------------------------
@@ -126,7 +135,11 @@ done
 
 echo ""
 if $DRY_RUN; then
-    echo -e "${C_EM}Cool down – this is a dry run. Nothing will actually be installed.${C_0}"
+    if $UNINSTALL; then
+        echo -e "${C_EM}Cool down – this is a dry run. Nothing will actually be uninstalled.${C_0}"
+    else
+        echo -e "${C_EM}Cool down – this is a dry run. Nothing will actually be installed.${C_0}"
+    fi
     echo ""
 fi
 
@@ -138,6 +151,152 @@ fi
 echo -e "${C_1}Acquire sudo ...${C_0}"
 sudo echo "" > /dev/null
 echo -e "${C_EM}Hello Sudoer!${C_0}"
+
+
+# ----------------------------------------------------------
+# Uninstall.
+# ----------------------------------------------------------
+if $UNINSTALL; then
+    HAS_BREW=false
+    if [ -x "$(command -v brew)" ]; then
+        HAS_BREW=true
+    fi
+
+    APACHE_SERVER_NAME=$(sed -n "s|^ServerName \(.*\)|\1|gp" $APACHE_PATH_CONF)
+    APACHE_DOC_ROOT=$(sed -n "s|DocumentRoot \"\(.*\)\"|\1|gp" $APACHE_PATH_CONF)
+
+    # Stop running Apache
+    echo -e "${C_1}Stopping potentially running Apache ...${C_0}"
+    if ! $DRY_RUN; then
+        sudo apachectl -k stop
+        if ($HAS_BREW); then
+            if [[ -n "$(brew ls --versions "httpd")" ]]; then
+                brew services stop httpd
+            fi
+        fi
+    fi
+
+    # sphp
+    if [ -x "$(command -v sphp)" ]; then
+        echo -e "${C_1}Uninstalling sphp ...${C_0}"
+        if ! $DRY_RUN; then
+            rm -f /usr/local/bin/sphp
+        fi
+    else
+        echo -e "${C_2}sphp not installed.${C_0}"
+    fi
+
+    # PHP versions.
+    if $HAS_BREW; then
+        for php_version in ${PHP_VERSIONS[*]}; do
+            if [[ -n "$(brew ls --versions "php@$php_version")" ]]; then
+                echo -e "${C_1}Uninstalling php$php_version ...${C_0}"
+                if ! $DRY_RUN; then
+                    brew uninstall "php@$php_version"
+                fi
+            else
+                echo -e "${C_2}php$php_version not installed.${C_0}"
+            fi
+        done
+    fi
+
+    # PHP ini file.
+    if [ -f "$PHP_INI_DEST" ]; then
+        echo -e "${C_1}Uninstalling PHP ini ...${C_0}"
+        if ! $DRY_RUN; then
+            sudo rm $PHP_INI_DEST
+        fi
+    else
+        echo -e "${C_2}PHP ini not installed.${C_0}"
+    fi
+
+    # Hosts file
+    if [ "$APACHE_SERVER_NAME" != "localhost" ]; then
+        HOSTS_PATH="/private/etc/hosts"
+        if ! $DRY_RUN; then
+            sudo sed -i.bak "s|^$APACHE_SERVER_NAME \(..*\)|#$APACHE_SERVER_NAME \1|g" $HOSTS_PATH
+        else
+            sudo sed -n "s|^$APACHE_SERVER_NAME \(..*\)|#$APACHE_SERVER_NAME \1|gp" $HOSTS_PATH
+        fi
+    fi
+
+    # Apache
+    if $HAS_BREW; then
+        if [[ -n "$(brew ls --versions "httpd")" ]]; then
+            echo -e "${C_1}Uninstalling Apache (via Homebrew) ...${C_0}"
+            if ! $DRY_RUN; then
+                brew uninstall httpd
+                sudo rm -rf $APACHE_PATH
+            fi
+        else
+            echo -e "${C_2}Apache (via Homebrew) not installed.${C_0}"
+        fi
+    fi
+
+    # Dnsmasq
+    if ($HAS_BREW); then
+        if [[ -n "$(brew ls --versions "dnsmasq")" ]]; then
+            echo -e "${C_1}Uninstalling Dnsmasq ...${C_0}"
+            if ! $DRY_RUN; then
+                sudo launchctl unload -w /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist 2>/dev/null
+                sudo rm /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
+                sudo rm -rf /etc/resolver
+                sudo rm $(brew --prefix)/etc/dnsmasq.conf
+                brew uninstall dnsmasq
+            fi
+        else
+            echo -e "${C_2}Dnsmasq not installed${C_0}"
+        fi
+    fi
+
+    # MySQL
+    if $HAS_BREW; then
+        if [[ -n "$(brew ls --versions "mysql")" ]]; then
+            echo -e "${C_1}Unnstalling MySQL ...${C_0}"
+            if ! $DRY_RUN; then
+                brew uninstall mysql
+            fi
+        else
+            echo -e "${C_2}MySQL not installed.${C_0}"
+        fi
+    fi
+
+    # Libiconv & Openldap
+    if ! $HAS_BREW; then
+        echo -e "${C_1}Would look for Libiconv if Homebrew was actually installed.${C_0}"
+    elif [[ -n "$(brew ls --versions "libiconv")" ]]; then
+        echo -e "${C_1}Uninstalling Libiconv ...${C_0}"
+        if ! $DRY_RUN; then
+            brew uninstall libiconv
+        fi
+    else
+        echo -e "${C_2}Libiconv not installed.${C_0}"
+    fi
+
+    if ! $HAS_BREW; then
+        echo -e "${C_1}Would look for Openldap if Homebrew was actually installed.${C_0}"
+    elif [[ -n "$(brew ls --versions "openldap")" ]]; then
+        echo -e "${C_1}Uninstalling Openldap ...${C_0}"
+        if ! $DRY_RUN; then
+            brew uninstall openldap
+        fi
+    else
+        echo -e "${C_2}Openldap not installed.${C_0}"
+    fi
+    
+    exit
+fi
+
+
+# Enable highest PHP version.
+if [ $NUM_PHP_VERSIONS -gt 0 ]; then
+    if $PHP_ENABLE; then
+        echo $LATEST_PHP_VERSION
+    else
+        echo -e "${C_2}Will not enable PHP${C_0}"
+    fi
+fi
+exit
 
 
 # ----------------------------------------------------------
@@ -279,26 +438,26 @@ elif ! [[ -n "$(brew ls --versions "httpd")" ]]; then
     # Apache document root.
     read -p "Apache Document Root [/Users/$APACHE_USER/WebServer/sites]: " APACHE_DOC_ROOT
     APACHE_DOC_ROOT=${APACHE_DOC_ROOT:-"/Users/$APACHE_USER/WebServer/sites"}
-    APACHE_DOC_ROOT_REGEX="^DocumentRoot \"..*\"$"
+    APACHE_DOC_ROOT_REGEX="^DocumentRoot ..*$"
     # Modify Apache conf.
     if $APACHE_PATH_CONF_EXISTS; then
         if ! $DRY_RUN; then
-            # Listen on port 80.
             sudo sed -i.bak "s|^Listen ..*$|Listen 80|g" $APACHE_PATH_CONF
-            # Enable rewrite module.
+            sudo sed -i.bak "s|^\#LoadModule vhost_alias_module \(.*\)$|LoadModule vhost_alias_module \1|g" $APACHE_PATH_CONF
             sudo sed -i.bak "s|^\#LoadModule rewrite_module \(.*\)$|LoadModule rewrite_module \1|g" $APACHE_PATH_CONF
             sudo sed -i.bak "s|^User ..*$|User $APACHE_USER|g" $APACHE_PATH_CONF
             sudo sed -i.bak "s|^Group ..*$|Group $APACHE_GROUP|g" $APACHE_PATH_CONF
             sudo sed -i.bak "s|^ServerAdmin ..*@..*\...*$|ServerAdmin $APACHE_ADMIN_EMAIL|g" $APACHE_PATH_CONF
             sudo sed -i.bak "s|^\#*ServerName ..*$|ServerName $APACHE_SERVER_NAME|g" $APACHE_PATH_CONF
-            sudo sed -i.bak "s|$APACHE_DOC_ROOT_REGEX|DocumentRoot $APACHE_DOC_ROOT|g" $APACHE_PATH_CONF
+            sudo sed -i.bak "s|$APACHE_DOC_ROOT_REGEX|DocumentRoot \"$APACHE_DOC_ROOT\"|g" $APACHE_PATH_CONF
             sudo perl -i.bak -0pe "s|^(DocumentRoot .*)\n<Directory ..*>|\1\n<Directory \"$APACHE_DOC_ROOT\">|mg" $APACHE_PATH_CONF
-            # Error log.
             sudo sed -i.bak "s|^ErrorLog ..*|ErrorLog \"$APACHE_LOG_DIR/error_log\"|g" $APACHE_PATH_CONF
+            sudo sed -i.bak "s|^\#*#Include \(.*\)/extra/httpd-vhosts.conf|Include \1/extra/httpd-vhosts.conf|g" $APACHE_PATH_CONF
         else
             echo "Will change Apache config lines ..."
             sudo sed -n "s|^Listen ..*$|Listen 80|gp" $APACHE_PATH_CONF
-            sudo sed -n "s|^\#*LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so$|LoadModule rewrite_module lib/httpd/modules/mod_rewrite.so|gp" $APACHE_PATH_CONF
+            sudo sed -n "s|^\#LoadModule vhost_alias_module \(.*\)$|LoadModule vhost_alias_module \1|gp" $APACHE_PATH_CONF
+            sudo sed -n "s|^\#LoadModule rewrite_module \(.*\)$|LoadModule rewrite_module \1|gp" $APACHE_PATH_CONF
             sudo sed -n "s|^User ..*$|User $APACHE_USER|gp" $APACHE_PATH_CONF
             sudo sed -n "s|^Group ..*$|Group $APACHE_GROUP|gp" $APACHE_PATH_CONF
             sudo sed -n "s|^ServerAdmin ..*@..*\...*$|ServerAdmin $APACHE_ADMIN_EMAIL|gp" $APACHE_PATH_CONF
@@ -307,6 +466,7 @@ elif ! [[ -n "$(brew ls --versions "httpd")" ]]; then
             # Disabled until I figure out how to print changed lines only with perl.
             # sudo perl -0pe "s|^(DocumentRoot .*)\n<Directory ..*>|\1\n<Directory \"$APACHE_DOC_ROOT\">|mg" $APACHE_PATH_CONF
             sudo sed -n "s|^ErrorLog ..*|ErrorLog \"$APACHE_LOG_DIR/error_log\"|gp" $APACHE_PATH_CONF
+            sudo sed -n "s|^\#*#Include .*/extra/httpd-vhosts.conf|Include $APACHE_PATH_VHOSTS|gp" $APACHE_PATH_CONF
         fi
     fi
 
@@ -315,6 +475,7 @@ elif ! [[ -n "$(brew ls --versions "httpd")" ]]; then
     if ! $DRY_RUN; then
         APACHE_VHOSTS=$(<"$DIR/httpd-vhosts.conf")
         APACHE_VHOSTS="${APACHE_VHOSTS//\{APACHE_DOC_ROOT\}/$APACHE_DOC_ROOT}"
+        APACHE_VHOSTS="${APACHE_VHOSTS//\{APACHE_SERVER_NAME\}/$APACHE_SERVER_NAME}"
         APACHE_PATH_VHOSTS_BACKUP="$APACHE_PATH_VHOSTS.bak"
         if ! [ -f "$APACHE_PATH_VHOSTS_BACKUP" ]; then
             echo -e "${C_INFO}Moving current Apache vhosts configuration to $APACHE_PATH_VHOSTS_BACKUP ...${C_0}"
@@ -323,22 +484,51 @@ elif ! [[ -n "$(brew ls --versions "httpd")" ]]; then
         echo "$APACHE_VHOSTS" | sudo tee $APACHE_PATH_VHOSTS > /dev/null
     fi
     
+    # Server root.
+    echo -e "${C_1}Creating server root ...${C_0}"
+    if ! $DRY_RUN; then
+        mkdir -p "$APACHE_DOC_ROOT"
+    fi
+    if ! [ -f "$APACHE_DOC_ROOT/index.html" ]; then
+        echo -e "${C_1}Installing ${C_INFO}http://$APACHE_SERVER_NAME${C_1} (index.html)${C_0}"
+        if ! $DRY_RUN; then
+            echo "<h1>I am website</h1><p>Check PHP info at <a href='info.php'>info.php</a>" > "$APACHE_DOC_ROOT/index.html"
+        fi
+    else
+        echo -e "${C_INFO}http://$APACHE_SERVER_NAME${C_2} (index.html) already installed. Will not overwrite.${C_0}"
+    fi
+
     # Restart Apache.
     echo -e "${C_1}Restarting Apache ...${C_0}"
     if ! $DRY_RUN; then
         sudo apachectl -k restart
     fi
-
-    # Server root.
-    echo -e "${C_1}Creating server root ...${C_0}"
-    if ! $DRY_RUN; then
-        mkdir -p "$APACHE_DOC_ROOT"
-        echo "<?php phpinfo();" > "$APACHE_DOC_ROOT/index.php"
-    fi
 else
     echo -e "${C_2}Apache (via Homebrew) already installed.${C_0}"
+    APACHE_SERVER_NAME=$(sed -n "s|^ServerName \(.*\)|\1|gp" $APACHE_PATH_CONF)
     APACHE_DOC_ROOT=$(sed -n "s|DocumentRoot \"\(.*\)\"|\1|gp" $APACHE_PATH_CONF)
 fi
+
+
+# ----------------------------------------------------------
+# Hosts file
+# ----------------------------------------------------------
+
+# Make sure the selected server name points to local machine.
+if [ "$APACHE_SERVER_NAME" != "localhost" ]; then
+    HOSTS_PATH="/private/etc/hosts"
+    if grep -q "$APACHE_SERVER_NAME" "$HOSTS_PATH"; then
+        echo -e "${C_INFO}$APACHE_SERVER_NAME${C_2} already in ${C_INFO}$HOSTS_PATH${C_0}"
+    else
+        echo -e "${C_1}Adding ${C_INFO}$APACHE_SERVER_NAME${C_1} to ${C_INFO}$HOSTS_PATH${C_1} since other than ${C_INFO}localhost${C_1} ...${C_0}"
+        if ! $DRY_RUN; then
+            echo "
+# $APACHE_SERVER_NAME installed by macos-web-development
+127.0.0.1       $APACHE_SERVER_NAME" | sudo tee -a "$HOSTS_PATH" > /dev/null
+        fi
+    fi
+fi
+
 
 
 # ----------------------------------------------------------
@@ -357,7 +547,7 @@ fi
 if ! [ -f "$PHP_INI_DEST" ]; then
     echo -e "${C_1}Installing PHP ini ...${C_0}"
     if ! $DRY_RUN; then
-        sudo mkdir -p /usr/local/php
+        sudo mkdir -p $PHP_INI_DIR
         sudo cp "$DIR/php.ini" $PHP_INI_DEST
     fi
 else
@@ -403,7 +593,7 @@ for php_version in ${PHP_VERSIONS[*]}; do
 done
 
 # Apache PHP config.
-echo -e "${C_1}Apache PHP config ...${C_0}"
+echo -e "${C_1}Installing Apache PHP config ...${C_0}"
 APACHE_PHP_INJECT='<IfModule dir_module>\n    DirectoryIndex index.php index.html\n</IfModule>\n<FilesMatch \.php\$>\n    SetHandler application/x-httpd-php\n</FilesMatch>'
 if $APACHE_PATH_CONF_EXISTS; then
     if ! $DRY_RUN; then
@@ -414,6 +604,17 @@ if $APACHE_PATH_CONF_EXISTS; then
         # Disabled until I figure out how to print changed lines only with perl.
         # sudo perl -0pe "s|^<IfModule dir_module>\n.*DirectoryIndex index.html\n</IfModule>|$APACHE_PHP_INJECT|mg" $APACHE_PATH_CONF
     fi
+fi
+
+
+# PHP info page.
+if ! [ -f "$APACHE_DOC_ROOT/info.php" ]; then
+    echo -e "${C_1}Installing ${C_INFO}http://$APACHE_SERVER_NAME/info.php${C_0}"
+    if ! $DRY_RUN; then
+        echo "<?php phpinfo();" > "$APACHE_DOC_ROOT/info.php"
+    fi
+else
+    echo -e "${C_INFO}http://$APACHE_SERVER_NAME/info.php${C_2} already installed. Will not overwrite.${C_0}"
 fi
 
 
@@ -430,13 +631,26 @@ else
 fi
 
 
+# Enable highest PHP version.
+if [ $NUM_PHP_VERSIONS -gt 0 ] && $PHP_ENABLE; then
+    echo $LATEST_PHP_VERSION
+else
+    echo -e "${C_2}sphp already installed.${C_0}"
+fi
+
+
 # Finish.
 echo ""
 if ! $DRY_RUN; then
     echo -e "${C_EM}Done!${C_0}"
     echo ""
+    echo -e "${C_GOOD}You should now be able to browse ${C_INFO}http://$APACHE_SERVER_NAME${C_GOOD}, and ${C_INFO}http://$APACHE_SERVER_NAME/info.php${C_GOOD} for PHP info (see PHP enabling below).${C_0}"
+    echo ""
     if $APACHE_INSTALLED; then
-        echo -e "${C_GOOD}You should now be able to browse ${C_INFO}http://{any}.test${C_GOOD} to visit ${C_INFO}$APACHE_DOC_ROOT/{any}/public${C_GOOD}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_GOOD}.${C_0}"
+        echo -e "${C_GOOD}You should also be able to browse ${C_INFO}http://{any}.test${C_GOOD} to visit ${C_INFO}$APACHE_DOC_ROOT/{any}/public${C_GOOD}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_0}"
+        echo ""
+    else
+        echo -e "${C_GOOD}Apache was already installed and not configured during this run. If Apache was previously installed by ${C_INFO}macos-web-development${C_GOOD}, you should be able to browse ${C_INFO}http://{any}.test${C_GOOD} to visit ${C_INFO}$APACHE_DOC_ROOT/{any}/public${C_GOOD}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_0}"
         echo ""
     fi
     echo -e "${C_GOOD}Next: if you haven't already, you should enable a PHP version by running ${C_0}sphp 7.2${C_GOOD} (use desired version).${C_0}"
