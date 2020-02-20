@@ -31,7 +31,7 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 Then browse http://localhost, or add http://cool.test something like this:
 
 ```bash
-mkdir -p ~/WebServer/sites/cool/public && echo -e "<h1>Cool</h1>" >> ~/WebServer/sites/cool/public/index.html
+mkdir -p ~/WebServer/sites/cool/public && echo "<h1>Cool</h1>" >> ~/WebServer/sites/cool/public/index.html
 ```
 
 
