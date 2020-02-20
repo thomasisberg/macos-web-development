@@ -14,11 +14,11 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 
 ### Apache vhosts configuration
 
-After installation the Apache vhosts configuration is found at `/usr/local/etc/httpd/extra/`. Change it and restart Apache using `sudo apachectl -k restart`.
+After installation the Apache vhosts configuration is found at `/usr/local/etc/httpd/extra/`. Change it whenever you want and restart Apache using `sudo apachectl -k restart`.
 
 ### PHP ini
 
-The PHP ini file is installed as a symlink in each PHP version, pointing to `/usr/local/php/php.ini`. One file for all PHP versions. 🥳
+The PHP ini file is installed as a symlink in each PHP version, pointing to `/usr/local/php/php.ini`. One file for all PHP versions. Enjoy! 🥳
 
 
 ## Usage
