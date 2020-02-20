@@ -52,7 +52,7 @@ The following software is included in a full installation.
 - **Openldap**
 - **Libiconv**
 - **MySQL**
-- **Dnsmasq**
+- **Dnsmasq** to be able to browser `http://{any}.test`
 - **Apache** some say it's better with Homebrew than the MacOS default. 🤷‍♂️ `sphp` only works with a Homebrew:ed Apache.
 - **PHP** versions 5.6 to 7.4
 - **sphp** a PHP switcher script
