@@ -53,8 +53,8 @@ The following software is included in a full installation.
 - **Libiconv**
 - **MySQL**
 - **Dnsmasq**
-- **Apache** (via Homebrew)
-- **PHP** versions 5.6 to 7.4 (optional)
+- **Apache** some say it's better with Homebrew than MacOS default. 🤷‍♂️
+- **PHP** versions 5.6 to 7.4
 - **sphp** a PHP switcher script
 
 
