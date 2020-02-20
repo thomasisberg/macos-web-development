@@ -7,6 +7,7 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 
 - Browse `http://{any}.test` to visit `~/{user}/WebServer/sites/{any}/public` (customizable path).
 - Switch between PHP versions 5.6 to 7.4 using command `sphp 7.2` (use desired version).
+- Distributes Apache vhosts configuraton and PHP ini from example files in repository. Simply adjust them before installation.
 - Only install desired software (Apache, MySQL, PHP etc).
 - Defaults to dry run – see what the script will do before actually doing it.
 
