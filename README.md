@@ -1,7 +1,7 @@
 # macos-web-development
 
 Installs MacOS web development stuff:
-- Xcode
+- xcode-select – Xcode command line developer tools
 - Homebrew
 - Openldap and Libiconv
 - MySQL

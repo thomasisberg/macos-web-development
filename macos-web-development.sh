@@ -3,7 +3,7 @@
 
 
 # Installs MacOS web development stuff:
-#  • Xcode
+#  • xcode-select – Xcode command line developer tools
 #  • Homebrew
 #  • Openldap and Libiconv
 #  • MySQL
@@ -67,10 +67,10 @@ C_EM="$C_LIGHT_PURPLE"
 # ----------------------------------------------------------
 # Help.
 # ----------------------------------------------------------
-if [ $HELP = true ]; then
+if $HELP; then
     echo ""
     echo -e "${C_1}Installs MacOS web development stuff:${C_0}"
-    echo -e "${C_EM} • Xcode${C_0}"
+    echo -e "${C_EM} • xcode-select – Xcode command line developer tools${C_0}"
     echo -e "${C_EM} • Homebrew${C_0}"
     echo -e "${C_EM} • Openldap and Libiconv${C_0}"
     echo -e "${C_EM} • MySQL${C_0}"
@@ -114,11 +114,10 @@ ALL_PHP_VERSIONS=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
 ALL_PHP_FLAGS=($PHP_5_6 $PHP_7_0 $PHP_7_1 $PHP_7_2 $PHP_7_3 $PHP_7_4)
 PHP_VERSIONS=()
 for i in "${!ALL_PHP_FLAGS[@]}"; do
-    if [ ${ALL_PHP_FLAGS[$i]} = true ]; then
+    if ${ALL_PHP_FLAGS[$i]}; then
         PHP_VERSIONS+=("${ALL_PHP_VERSIONS[$i]}")
     fi
 done
-
 
 
 # ----------------------------------------------------------
