@@ -53,7 +53,7 @@ The following software is included in a full installation.
 - **Libiconv**
 - **MySQL**
 - **Dnsmasq**
-- **Apache** some say it's better with Homebrew than the MacOS default. 🤷‍♂️ `sphp` only works with a Homebrewed Apache.
+- **Apache** some say it's better with Homebrew than the MacOS default. 🤷‍♂️ `sphp` only works with a Homebrew:ed Apache.
 - **PHP** versions 5.6 to 7.4
 - **sphp** a PHP switcher script
 
