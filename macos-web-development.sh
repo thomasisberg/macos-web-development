@@ -120,6 +120,10 @@ for i in "${!ALL_PHP_FLAGS[@]}"; do
 done
 
 
+# ----------------------------------------------------------
+# Initial message for dry run.
+# ----------------------------------------------------------
+
 echo ""
 if $DRY_RUN; then
     echo -e "${C_EM}Cool down – this is a dry run. Nothing will actually be installed.${C_0}"
