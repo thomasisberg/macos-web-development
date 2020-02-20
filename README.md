@@ -47,15 +47,15 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 
 The following software is included in a full installation.
 
-- *xcode-select* – Xcode command line developer tools. You probably already have this – feel free to pas `--no-xcode-select`.
-- Homebrew
-- Openldap
-- Libiconv
-- MySQL
-- Dnsmasq
-- Apache (via Homebrew)
-- PHP versions 5.6 to 7.4 (optional)
-- sphp – a PHP switcher script
+- **xcode-select** – Xcode command line developer tools. You probably already have this – feel free to pas `--no-xcode-select`.
+- **Homebrew**
+- **Openldap**
+- **Libiconv**
+- **MySQL**
+- **Dnsmasq**
+- **Apache (via Homebrew)**
+- **PHP versions 5.6 to 7.4 (optional)**
+- **sphp – a PHP switcher script**
 
 
 ## Credit
