@@ -7,10 +7,18 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 
 - Browse `http://{any}.test` to visit `~/{user}/WebServer/sites/{any}/public` (customizable path).
 - Switch between PHP versions 5.6 to 7.4 using command `sphp 7.2` (use desired version).
-- Distributes Apache vhosts configuraton and PHP ini from example files in repository. Simply adjust them before installation. After installation the Apache vhosts configuration is found in location used by Homebrew (`/usr/local/etc/httpd/extra/`). The PHP ini file is installed as a symlink in each PHP version, pointing to `/usr/local/php/php.ini`. One file for all PHP versions. 🥳
+- Distributes Apache vhosts configuraton and PHP ini from example files in repository. Simply adjust them before installation. 
 - Only install desired software (Apache, MySQL, PHP etc) by opting out.
 - Defaults to dry run – see what the script will do before actually doing it.
 - Uninstall. Don't know when you would use this, but hey, it's a free world. 😀
+
+### Apache vhosts configuration
+
+After installation the Apache vhosts configuration is found at `/usr/local/etc/httpd/extra/`. Change it and restart Apache using `sudo apachectl -k restart`.
+
+### PHP ini
+
+The PHP ini file is installed as a symlink in each PHP version, pointing to `/usr/local/php/php.ini`. One file for all PHP versions. 🥳
 
 
 ## Usage
