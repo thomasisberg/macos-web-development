@@ -79,7 +79,7 @@ Installs mandatory stuff and **Apache**, **MySQL**, **PHP 7.1**, **7.2**, **7.3*
 ./macos-web-development.sh --p-common --no-dry-run
 ```
 
-#### Minimal
+##### Minimal
 
 Installs mandatory stuff and **Apache**, **PHP 7.2** and **Dnsmasq**
 
