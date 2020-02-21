@@ -81,7 +81,7 @@ Installs mandatory stuff and **Apache**, **MySQL**, **PHP 7.1**, **7.2**, **7.3*
 
 ##### Minimal
 
-Installs mandatory stuff and **Apache**, **PHP 7.2** and **Dnsmasq**
+Installs mandatory stuff and **Apache**, **PHP 7.2** and **Dnsmasq**. No **MySQL**.
 
 ```bash
 ./macos-web-development.sh --p-minimal --no-dry-run
