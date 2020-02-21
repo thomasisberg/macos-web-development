@@ -100,6 +100,16 @@ The following software is included in a full installation.
 - **sphp** a PHP switching script
 
 
+### Uninstallation
+
+Will not uninstall *xcode-select*, *Homebrew* and *Openldap*.
+
+Will not remove the server root folder at `~/WebServer/sites` (or custom folder), or any websites in there.
+
+Will uninstall the MySQL server, but will not remove the MySQL database.
+
+
+
 ## Options
 
 Option                            | Description
