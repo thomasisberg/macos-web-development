@@ -21,7 +21,7 @@ mkdir -p ~/WebServer/sites/cool/public && echo "<h1>Cool</h1>" >> ~/WebServer/si
 
 ### Also
 
-Because you want to manage your own stack of independent software, which you are free to mess around with in any way you want. *Macos-web-development* simply install packages, mostly with [Homebrew](https://brew.sh) (which is also automatically installed), and edit configuration files.
+Because you want to manage your own stack of independent software, which you are free to mess around with in any way you want. *Macos-web-development* simply installs packages, mostly with [Homebrew](https://brew.sh) (which is also automatically installed), and edit configuration files.
 
 
 
