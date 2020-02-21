@@ -5,7 +5,7 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 
 ## Why macos-web-development?
 
-Because you want to
+### Because you want to
 
 ```bash
 ./macos-web-development.sh --no-dry-run
