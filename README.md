@@ -102,7 +102,7 @@ The following software is included in a full installation.
 
 ## Options
 
-### -h|--help
+### -h or --help
 Display help.
 
 ### --no-apache
