@@ -116,3 +116,10 @@ The following software is included in a full installation.
 ### sphp
 
 Script by Andy Miller: [Easy Brew PHP version switching](https://gist.github.com/rhukster/f4c04f1bf59e0b74e335ee5d186a98e2)
+
+
+## Requirements
+
+Successfully tested with a fresh installation of **MacOS Catalina** (10.15).
+
+Probably works with earlier versions too... 🙄
