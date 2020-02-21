@@ -31,13 +31,14 @@ PHP_7_2=true
 PHP_7_3=true
 PHP_7_4=true
 PHP_ENABLE=true
+PRESET_DEFAULT=false
 UNINSTALL=false
 
 while test $# != 0
 do
     case "$1" in
-    --help)            HELP=true ;;
     -h)                HELP=true ;;
+    --help)            HELP=true ;;
     --no-apache)       INSTALL_APACHE=false ;;
     --no-dnsmasq)      INSTALL_DNSMASQ=false ;;
     --no-dry-run)      DRY_RUN=false ;;
@@ -51,6 +52,7 @@ do
     --no-php-7-4)      PHP_7_4=false ;;
     --no-php-enable)   PHP_ENABLE=false ;;
     --no-xcode-select) INSTALL_XCODE=false ;;
+    --p-default)       PRESET_DEFAULT=true ;;
     --uninstall)       UNINSTALL=true ;;
     esac
     shift
@@ -82,6 +84,19 @@ C_1="$C_PURPLE"
 C_2="$C_BLUE"
 C_INFO="$C_BOLD_PURPLE"
 C_EM="$C_BOLD_CYAN"
+
+
+# ----------------------------------------------------------
+# Presets.
+# ----------------------------------------------------------
+
+# Default
+if $PRESET_DEFAULT; then
+    INSTALL_XCODE=false
+    PHP_5_6=false
+    PHP_7_0=false
+    PHP_7_4=false
+fi
 
 
 # ----------------------------------------------------------
@@ -119,6 +134,7 @@ if $HELP; then
     echo -e "${C_INFO}--no-php-7-4       ${C_EM}Skip PHP 7.4${C_0}"
     echo -e "${C_INFO}--no-php-enable    ${C_EM}Will not enable the latest PHP version installed${C_0}"
     echo -e "${C_INFO}--no-xcode-select  ${C_EM}Skip xcode-select${C_0}"
+    echo -e "${C_INFO}--p-default        ${C_EM}Sets options ${C_0}--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select"
     echo -e "${C_INFO}--uninstall        ${C_EM}Uninstall stuff, but leave some stuff${C_0}"
     echo ""
     exit
@@ -159,7 +175,6 @@ if [ $NUM_PHP_VERSIONS -gt 0 ]; then
     LATEST_PHP_VERSION="${PHP_VERSIONS[$NUM_PHP_VERSIONS-1]}"
     PHP_EXAMPLE_VERSION="$LATEST_PHP_VERSION"
 fi
-
 
 
 # ----------------------------------------------------------
@@ -317,7 +332,7 @@ do_uninstall () {
             brew uninstall libiconv
         fi
     else
-        echo -e "${C_2}Libiconv not installed.${C_0}"
+        echo -e "${C_2}Libiconv not installed with Homebrew.${C_0}"
     fi
 
     # Openldap
@@ -326,7 +341,7 @@ do_uninstall () {
     elif [[ -n "$(brew ls --versions "openldap")" ]]; then
         echo -e "${C_2}Will not uninstall Openldap, since it's commonly used by other packages.${C_0}"
     else
-        echo -e "${C_2}Openldap not installed.${C_0}"
+        echo -e "${C_2}Openldap not installed with Homebrew.${C_0}"
     fi
 
     # Homebrew
@@ -394,15 +409,23 @@ do_homebrew () {
 # ----------------------------------------------------------
 
 do_openldap () {
-    if ! $HAS_BREW; then
-        echo -e "${C_1}Would look for Openldap if Homebrew was actually installed.${C_0}"
-    elif ! [[ -n "$(brew ls --versions "openldap")" ]]; then
+    if ! [ -x "$(command -v ldapsearch)" ]; then
         echo -e "${C_1}Installing Openldap ...${C_0}"
-        if ! $DRY_RUN; then
+        if $HAS_BREW && !$DRY_RUN; then
             brew install openldap
         fi
     else
-        echo -e "${C_2}Openldap already installed.${C_0}"
+        HAS_BREW_OPENLDAP=false
+        if ($HAS_BREW); then
+            if [[ -n "$(brew ls --versions "openldap")" ]]; then
+                HAS_BREW_OPENLDAP=true
+            fi
+        fi
+        if $HAS_BREW_OPENLDAP; then
+            echo -e "${C_2}Openldap already installed.${C_0}"
+        else
+            echo -e "${C_2}Found command ${C_0}ldapsearch${C_2}. Openldap not installed.${C_0}"
+        fi
     fi
 }
 
@@ -412,15 +435,23 @@ do_openldap () {
 # ----------------------------------------------------------
 
 do_libiconv () {
-    if ! $HAS_BREW; then
-        echo -e "${C_1}Would look for Libiconv if Homebrew was actually installed.${C_0}"
-    elif ! [[ -n "$(brew ls --versions "libiconv")" ]]; then
+    if ! [ -x "$(command -v iconv)" ]; then
         echo -e "${C_1}Installing Libiconv ...${C_0}"
-        if ! $DRY_RUN; then
+        if $HAS_BREW && !$DRY_RUN; then
             brew install libiconv
         fi
     else
-        echo -e "${C_2}Libiconv already installed.${C_0}"
+        HAS_BREW_LIBICONV=false
+        if ($HAS_BREW); then
+            if [[ -n "$(brew ls --versions "libiconv")" ]]; then
+                HAS_BREW_LIBICONV=true
+            fi
+        fi
+        if $HAS_BREW_LIBICONV; then
+            echo -e "${C_2}Libiconv already installed.${C_0}"
+        else
+            echo -e "${C_2}Found iconv on machine. Libiconv not installed.${C_0}"
+        fi
     fi
 }
 
@@ -555,9 +586,13 @@ do_apache () {
         fi
         
         # Server root.
-        echo -e "${C_1}Creating server root ...${C_0}"
-        if ! $DRY_RUN; then
-            mkdir -p "$APACHE_DOC_ROOT"
+        if ! [ -d "$APACHE_DOC_ROOT" ]; then
+            echo -e "${C_1}Creating server root ...${C_0}"
+            if ! $DRY_RUN; then
+                mkdir -p "$APACHE_DOC_ROOT"
+            fi
+        else
+            echo -e "${C_2}Server root already created.${C_0}"
         fi
         if ! [ -f "$APACHE_DOC_ROOT/index.html" ]; then
             echo -e "${C_1}Installing ${C_INFO}http://$APACHE_SERVER_NAME${C_1} (index.html)${C_0}"

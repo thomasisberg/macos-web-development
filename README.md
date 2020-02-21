@@ -69,6 +69,17 @@ The custom PHP ini file is installed as a symlink in each PHP version, pointing 
 ```
 
 
+#### Installation with preset
+
+##### Default
+
+Skips PHP 5.6, PHP 7.0, PHP 7.4 and Xcode command line developer tools.
+
+```bash
+./macos-web-development.sh --p-common --no-dry-run
+```
+
+
 #### Uninstallation
 
 Maybe you're poking around with your computer and want to *uninstall... install... uninstall... install...* 😎
@@ -91,9 +102,9 @@ The following software is included in a full installation.
 
 - **xcode-select** Xcode command line developer tools. You probably already have this... feel free to pass `--no-xcode-select`.
 - **Homebrew**
-- **Openldap**
-- **Libiconv**
-- **MySQL**
+- **Openldap** if not already installed.
+- **Libiconv** if not already installed.
+- **MySQL** if not already installed.
 - **Dnsmasq** to be able to browse `http://{any}.test`
 - **Apache** some say it's better with Homebrew than the MacOS default. 🤷‍♂️ Script based Apache PHP configuration (and PHP switching with `sphp`) only works with a Homebrew:ed Apache.
 - **PHP** versions 5.6 to 7.4
@@ -102,11 +113,15 @@ The following software is included in a full installation.
 
 ### Uninstallation
 
-- Will not uninstall *xcode-select*, *Homebrew* and *Openldap*.
+- Will not uninstall **xcode-select**, **Homebrew** and **Openldap**.
 - Will not remove the server root folder at `~/WebServer/sites` (or custom folder), or any websites in there.
 - Will uninstall the MySQL server, but will not remove the MySQL database.
 - Takes no other options than `--no-dry-run` and will uninstall all versions of PHP etc.
 
+
+### Complementary installation
+
+Should you decide that you need PHP 7.4 after installation without it, just execute a new installation. Installed software will be left alone, and only the missing packages will be installed. This should also work with future releases of PHP, once they're implemented in this script.
 
 
 ## Options
@@ -127,6 +142,7 @@ Option                            | Description
 --no-php-7-4      | Skip PHP 7.4
 --no-php-enable   | Don't enable the latest PHP version installed.
 --no-xcode-select | Skip Xcode command line developer tools.
+--p-default       | Preset. Sets options `--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select`
 --uninstall       | Uninstall. Takes no other options than `--no-dry-run` and will uninstall everything – all versions of PHP etc.
 
 
