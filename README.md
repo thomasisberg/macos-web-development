@@ -120,6 +120,8 @@ Script by Andy Miller: [Easy Brew PHP version switching](https://gist.github.com
 
 ## Requirements
 
+### MacOS
+
 Successfully tested with a fresh installation of **MacOS Catalina** *(10.15.3)*
 
 Probably works with earlier versions too... 🙄
