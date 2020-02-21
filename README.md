@@ -102,49 +102,49 @@ The following software is included in a full installation.
 
 ## Options
 
-### -h or --help
+#### -h or --help
 Display help.
 
-### --no-apache
+#### --no-apache
 Skip Apache.
 
-### --no-dnsmasq
+#### --no-dnsmasq
 Skip Dnsmasq. You just won't be able to browse `http://{any}.test` to automatically visit `~/WebServer/sites/{any}/public`. Virtual hosts can sill be managed manually.
 
-### --no-dry-run
+#### --no-dry-run
 Disable dry run and actually install stuff.
 
-### --no-mysql
+#### --no-mysql
 Skip MySQL.
 
-### --no-php
+#### --no-php
 Skip PHP entirely.
 
-### --no-php-5-6
+#### --no-php-5-6
 Skip PHP 5.6
 
-### --no-php-7-0
+#### --no-php-7-0
 Skip PHP 7.0
 
-### --no-php-7-1
+#### --no-php-7-1
 Skip PHP 7.1
 
-### --no-php-7.2
+#### --no-php-7.2
 Skip PHP 7.2
 
-### --no-php-7.3
+#### --no-php-7.3
 Skip PHP 7.3
 
-### --no-php-7.4
+#### --no-php-7.4
 Skip PHP 7.4
 
-### --no-php-enable
+#### --no-php-enable
 Don't enable the latest PHP version installed.
 
-### --no-xcode-select
+#### --no-xcode-select
 Skip Xcode command line developer tools.
 
-### --uninstall
+#### --uninstall
 Uninstall. Takes no other options than `--no-dry-run` and will uninstall everything – all versions of PHP etc.
 
 
