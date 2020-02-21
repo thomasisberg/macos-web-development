@@ -110,7 +110,7 @@ The following software is included in a full installation.
 - **PHP** versions 5.6 to 7.4
 - **sphp** a PHP switching script
 
-All of the above will only be installed if not already on the machine. However, **Apache** and **PHP versions** will only be skipped by default if they were already installed *with Homebrew*.
+All of the above will only be installed if not already on the machine. However, **Apache** and versions of **PHP** will only be skipped by default if they were already installed *with Homebrew*.
 
 
 ### Uninstallation
