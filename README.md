@@ -41,7 +41,7 @@ After installation the Apache vhosts configuration is found at `/usr/local/etc/h
 
 ### PHP ini
 
-The custom PHP ini file is installed as a symlink in each PHP version, pointing to `/usr/local/php/php.ini`. One file for all PHP versions. Enjoy! 🥳
+The custom PHP ini file is installed as a symlink in each PHP version, pointing to `/usr/local/php/php.ini`. One file for all PHP versions = enjoy. 🥳
 
 
 ## Usage
