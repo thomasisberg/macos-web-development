@@ -73,10 +73,18 @@ The custom PHP ini file is installed as a symlink in each PHP version, pointing 
 
 ##### Common
 
-Installs mandatory stuff and **Apache**, **MySQL**, **PHP 7.1**, **7.2**, **7.3** and **Dnsmasq** by setting options: `--no-php-5-6 --no-php-7-0 --no-php-7-4 --no-xcode-select`.
+Installs mandatory stuff and **Apache**, **MySQL**, **PHP 7.1**, **7.2**, **7.3** and **Dnsmasq**.
 
 ```bash
 ./macos-web-development.sh --p-common --no-dry-run
+```
+
+#### Minimal
+
+Installs mandatory stuff and **Apache**, **PHP 7.2** and **Dnsmasq**
+
+```bash
+./macos-web-development.sh --p-minimal --no-dry-run
 ```
 
 
@@ -144,7 +152,8 @@ Option                            | Description
 --no-php-7-4      | Skip PHP 7.4
 --no-php-enable   | Don't enable the latest PHP version installed.
 --no-xcode-select | Skip Xcode command line developer tools.
---p-common       | Preset. Sets options `--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select`
+--p-common        | Common preset. Sets options `--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select`
+--p-minimal       | Minimal preset. Sets options `--no-mysql --no-php-5-6 --no-php-7-0 --no-php-7-1 --no-php-7-3 --no--php-7-4 --no-xcode-select`
 --uninstall       | Uninstall. Takes no other options than `--no-dry-run` and will uninstall all versions of PHP etc.
 
 
