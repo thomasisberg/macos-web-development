@@ -31,7 +31,7 @@ PHP_7_2=true
 PHP_7_3=true
 PHP_7_4=true
 PHP_ENABLE=true
-PRESET_DEFAULT=false
+PRESET_COMMON=false
 UNINSTALL=false
 
 while test $# != 0
@@ -52,7 +52,7 @@ do
     --no-php-7-4)      PHP_7_4=false ;;
     --no-php-enable)   PHP_ENABLE=false ;;
     --no-xcode-select) INSTALL_XCODE=false ;;
-    --p-default)       PRESET_DEFAULT=true ;;
+    --p-common)        PRESET_COMMON=true ;;
     --uninstall)       UNINSTALL=true ;;
     esac
     shift
@@ -91,7 +91,7 @@ C_EM="$C_BOLD_CYAN"
 # ----------------------------------------------------------
 
 # Default
-if $PRESET_DEFAULT; then
+if $PRESET_COMMON; then
     INSTALL_XCODE=false
     PHP_5_6=false
     PHP_7_0=false
@@ -134,7 +134,7 @@ if $HELP; then
     echo -e "${C_INFO}--no-php-7-4       ${C_EM}Skip PHP 7.4${C_0}"
     echo -e "${C_INFO}--no-php-enable    ${C_EM}Will not enable the latest PHP version installed${C_0}"
     echo -e "${C_INFO}--no-xcode-select  ${C_EM}Skip xcode-select${C_0}"
-    echo -e "${C_INFO}--p-default        ${C_EM}Sets options ${C_0}--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select"
+    echo -e "${C_INFO}--p-common        ${C_EM}Sets options ${C_0}--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select"
     echo -e "${C_INFO}--uninstall        ${C_EM}Uninstall stuff, but leave some stuff${C_0}"
     echo ""
     exit

@@ -71,7 +71,7 @@ The custom PHP ini file is installed as a symlink in each PHP version, pointing 
 
 #### Installation with preset
 
-##### Default
+##### Common
 
 Skips PHP 5.6, 7.0, 7.4 and Xcode command line developer tools by setting options: `--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select`.
 
@@ -142,7 +142,7 @@ Option                            | Description
 --no-php-7-4      | Skip PHP 7.4
 --no-php-enable   | Don't enable the latest PHP version installed.
 --no-xcode-select | Skip Xcode command line developer tools.
---p-default       | Preset. Sets options `--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select`
+--p-common       | Preset. Sets options `--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select`
 --uninstall       | Uninstall. Takes no other options than `--no-dry-run` and will uninstall everything – all versions of PHP etc.
 
 
