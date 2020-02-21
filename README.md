@@ -73,7 +73,7 @@ The custom PHP ini file is installed as a symlink in each PHP version, pointing 
 
 ##### Common
 
-Skips PHP 5.6, 7.0, 7.4 and Xcode command line developer tools by setting options: `--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select`.
+Skips **PHP 5.6**, **7.0**, **7.4** and **Xcode command line developer tools** by setting options: `--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select`.
 
 ```bash
 ./macos-web-development.sh --p-common --no-dry-run
