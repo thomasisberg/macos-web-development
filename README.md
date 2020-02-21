@@ -11,13 +11,13 @@ Because you want to
 ./macos-web-development.sh --no-dry-run
 ```
 
-and then instantly create a cool PHP based website website at http://cool.test
+... and then instantly create a cool PHP based website at http://cool.test
 
 ```bash
 mkdir -p ~/WebServer/sites/cool/public && echo "<h1>Cool</h1>" >> ~/WebServer/sites/cool/public/index.php
 ```
 
-without reading tutorials and performing installation steps manually.
+... without reading tutorials and performing installation steps manually.
 
 ### Also
 
