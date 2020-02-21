@@ -150,7 +150,7 @@ Option                                    | D
 `--no-php-7-2`        | Skip PHP 7.2
 `--no-php-7-3`        | Skip PHP 7.3
 `--no-php-7-4`        | Skip PHP 7.4
-`--no-php-enable`     | Don't automatically enable the latest version of PHP in currently executed installation.
+`--no-php-enable`     | Don't automatically enable the latest version of PHP in currently executing installation.
 `--no-xcode-select`   | Skip Xcode command line developer tools.
 `--p-common`          | Common preset. Sets options `--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select`
 `--p-minimal`         | Minimal preset. Sets options `--no-mysql --no-php-5-6 --no-php-7-0 --no-php-7-1 --no-php-7-3 --no--php-7-4 --no-xcode-select`
