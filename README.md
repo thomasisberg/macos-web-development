@@ -32,7 +32,7 @@ Because you want to manage your own stack of independent software, which you are
 - Distributes Apache vhosts configuraton and PHP ini from example files in repository. Simply adjust them to your needs before installation... or not. 🙃
 - Install desired software only, by opting out.
 - Defaults to dry run – see what the script will do before actually doing it.
-- Uninstall. Don't know when you would use this, but hey, it's a free world. 😀
+- Uninstall. Not sure when you would use this, but hey, it's a free world. 😀
 
 ### Apache configuration
 
