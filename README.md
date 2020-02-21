@@ -33,12 +33,12 @@ Because you want to manage your own stack of independent software, which you are
 - **Switch** between PHP versions 5.6 to 7.4 using command `sphp {version}`, for example `sphp 7.2`.
 - **Distribute** Apache vhosts configuraton and PHP ini from template files in repository. Simply adjust them to your needs before installation... or not. 🙃
 - **Opt put** of software you don't want. For example `--no-mysql`.
-- **Dry run** – check which software is already installed etc.
+- **Dry run** – check which software is already installed etc. This is the default behaviour, use `--no-dry-run` to actually install stuff.
 - **Uninstall** – not sure when you would use this, but hey, it's a free world. 😀
 
 ### Apache configuration
 
-After installation the Apache vhosts configuration is found at `/usr/local/etc/httpd/extra/`. Change it whenever you want and restart Apache using `sudo apachectl -k restart`.
+After installation the Apache vhosts configuration is found at `/usr/local/etc/httpd/extra/httpd-vhosts.conf`. Change it whenever you want and restart Apache using `sudo apachectl -k restart`.
 
 
 ### PHP ini
@@ -59,12 +59,6 @@ The custom PHP ini file is installed as a symlink in each PHP version, pointing 
 
 ```bash
 ./macos-web-development.sh --no-dry-run
-```
-
-Then browse http://localhost, or http://cool.test after creating it:
-
-```bash
-mkdir -p ~/WebServer/sites/cool/public && echo "<h1>Cool</h1>" >> ~/WebServer/sites/cool/public/index.html
 ```
 
 
