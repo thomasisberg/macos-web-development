@@ -5,17 +5,24 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 
 ## Why install with macos-web-development?
 
-### Because you want to
+Because you want to
 
 ```bash
 ./macos-web-development.sh --no-dry-run
 ```
 
-And then instantly create a cool PHP based website website at http://cool.test
+and then instantly create a cool PHP based website website at http://cool.test
 
 ```bash
 mkdir -p ~/WebServer/sites/cool/public && echo "<h1>Cool</h1>" >> ~/WebServer/sites/cool/public/index.php
 ```
+
+without reading tutorials and performing installation steps manually.
+
+### Also
+
+Because you want to manage your own stack of independent software, and be able to tweak it any way you want.
+
 
 
 ## Features
