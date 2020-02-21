@@ -126,7 +126,7 @@ All of the above will only be installed if not already on the machine. However, 
 - Will not uninstall **xcode-select**, **Homebrew** and **Openldap**.
 - Will not remove the server root folder at `~/WebServer/sites` (or your custom folder), or any websites in there.
 - Will uninstall the **MySQL server**, but will not remove any **databases**.
-- Takes no other options than `--no-dry-run` and will uninstall all versions of **PHP** etc.
+- Takes no other options than `--no-dry-run` and will always uninstall all supported versions of **PHP** etc.
 
 
 ### Complementary installation
