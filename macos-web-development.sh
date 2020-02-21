@@ -409,9 +409,21 @@ do_homebrew () {
     fi
 
     if $HAS_BREW; then
-        echo -e "${C_1}Installing Homebrew Services ...${C_0}"
-        if ! $DRY_RUN; then
-            brew tap homebrew/services
+        HAS_BREW_SERVICES=false
+        TAPS="$(brew tap)"
+        TAPS_LIST=($TAPS)
+        for tap in "${TAPS_LIST[@]}"; do
+            if [[ $tap = "homebrew/services" ]]; then
+                HAS_BREW_SERVICES=true
+            fi
+        done
+        if ! $HAS_BREW_SERVICES; then
+            echo -e "${C_1}Installing Homebrew Services ...${C_0}"
+            if ! $DRY_RUN; then
+                brew tap homebrew/services
+            fi
+        else
+            echo -e "${C_2}Homebrew Services already installed.${C_0}"
         fi
     fi
 }
