@@ -136,7 +136,7 @@ Should you decide that you need PHP 7.4 after installation without it, just exec
 
 ## Options
 
-Option                                | Description
+Option                                    | Description
 :---                  | :---
 `-h` or `--help`      | Display help.
 `--no-apache`         | Skip Apache.
