@@ -67,16 +67,21 @@ C_ORANGE='\033[0;33m'
 C_BLUE='\033[0;34m'
 C_PURPLE='\033[0;35m'
 C_CYAN='\033[0;36m'
-C_LIGHT_PURPLE='\033[1;35m'
+C_YELLOW='\033[0;93m'
+C_LIGHT_GREY='\033[0;37m'
+C_DARK_GREY='\033[1;30m'
+C_BOLD_BLUE='\033[1;34m'
+C_BOLD_PURPLE='\033[1;35m'
+C_BOLD_CYAN='\033[1;36m'
 
 C_GOOD="$C_GREEN"
 C_OK="$C_ORANGE"
 C_BAD="$C_RED"
 
-C_1="$C_CYAN"
+C_1="$C_PURPLE"
 C_2="$C_BLUE"
-C_INFO="$C_OK"
-C_EM="$C_LIGHT_PURPLE"
+C_INFO="$C_BOLD_PURPLE"
+C_EM="$C_BOLD_CYAN"
 
 
 # ----------------------------------------------------------
@@ -129,6 +134,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 APACHE_PATH="/usr/local/etc/httpd"
 APACHE_PATH_CONF="$APACHE_PATH/httpd.conf"
 APACHE_PATH_CONF_EXISTS=false
+if [ -f "$APACHE_PATH_CONF" ]; then
+    APACHE_PATH_CONF_EXISTS=true
+fi
 APACHE_PATH_VHOSTS="$APACHE_PATH/extra/httpd-vhosts.conf"
 APACHE_LOG_DIR="/var/log/apache2"
 APACHE_INSTALLED=false
@@ -288,8 +296,9 @@ do_uninstall () {
     # MySQL
     if $HAS_BREW; then
         if [[ -n "$(brew ls --versions "mysql")" ]]; then
-            echo -e "${C_1}Unnstalling MySQL ...${C_0}"
+            echo -e "${C_1}Uninstalling MySQL ...${C_0}"
             if ! $DRY_RUN; then
+                brew services stop mysql
                 brew uninstall mysql
                 sudo rm -rf /usr/local/var/mysql
                 sudo rm -f /usr/local/var/mysql.ibd
@@ -373,6 +382,10 @@ do_homebrew () {
     if [ -x "$(command -v brew)" ]; then
         HAS_BREW=true
     fi
+
+    if $HAS_BREW; then
+        brew tap homebrew/services
+    fi
 }
 
 
@@ -421,6 +434,7 @@ do_mysql () {
         echo -e "${C_1}Installing MySQL ...${C_0}"
         if ! $DRY_RUN; then
             brew install mysql
+            brew services start mysql
         fi
     else
         echo -e "${C_2}MySQL already installed.${C_0}"
@@ -475,12 +489,11 @@ do_apache () {
         if ! $DRY_RUN; then
             brew install httpd
             brew services start httpd
+            if [ -f "$APACHE_PATH_CONF" ]; then
+                APACHE_PATH_CONF_EXISTS=true
+            fi
         fi
         APACHE_INSTALLED=true
-        APACHE_PATH_CONF_EXISTS=false
-        if [ -f "$APACHE_PATH_CONF" ]; then
-            APACHE_PATH_CONF_EXISTS=true
-        fi
         # Apache User / Group.
         read -p "Apache User [$USER]: " APACHE_USER
         APACHE_USER=${APACHE_USER:-$USER}
@@ -666,7 +679,7 @@ do_php () {
         fi
     else
         if ! $DRY_RUN; then
-            echo -e "${C_INFO}Apache configuration file was not found at $APACHE_PATH_CONF. PHP configuration not installed. Wanted to inject\n${C_0}$APACHE_PHP_INJECT"
+            echo -e "${C_INFO}Apache configuration file was not found at $APACHE_PATH_CONF. PHP configuration not installed. Wanted to inject:\n${C_0}$APACHE_PHP_INJECT"
         fi
     fi
 
@@ -726,25 +739,34 @@ do_finish () {
     if ! $DRY_RUN; then
         echo -e "${C_EM}Done!${C_0}"
         echo ""
-        echo -e "${C_GOOD}You should now be able to browse ${C_INFO}http://$APACHE_SERVER_NAME${C_GOOD}, and ${C_INFO}http://$APACHE_SERVER_NAME/info.php${C_GOOD} for PHP info (see PHP enabling below).${C_0}"
+        echo -e "${C_EM}You should now be able to browse ${C_INFO}http://$APACHE_SERVER_NAME${C_EM}, and ${C_INFO}http://$APACHE_SERVER_NAME/info.php${C_EM} for PHP info.${C_0}"
         echo ""
         if $APACHE_INSTALLED; then
             if $INSTALL_DNSMASQ; then
-                echo -e "${C_GOOD}You should also be able to browse ${C_INFO}http://{any}.test${C_GOOD} to visit ${C_INFO}$APACHE_DOC_ROOT/{any}/public${C_GOOD}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_0}"
+                echo -e "${C_EM}You should also be able to browse ${C_INFO}http://{any}.test${C_EM} to visit ${C_INFO}$APACHE_DOC_ROOT/{any}/public${C_EM}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_0}"
             else
-                echo -e "${C_GOOD}Since you didn't install Dnsmasq, you may not be able to browse ${C_INFO}http://{any}.test${C_GOOD} to visit ${C_INFO}$APACHE_DOC_ROOT/{any}/public${C_GOOD}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_0}"
+                echo -e "${C_EM}Since you didn't install Dnsmasq, you may not be able to browse ${C_INFO}http://{any}.test${C_EM} to visit ${C_INFO}$APACHE_DOC_ROOT/{any}/public${C_EM}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_0}"
             fi
             echo ""
         else
-            echo -e "${C_GOOD}Apache was already installed and not configured during this run. If Apache and Dnsmasq was previously installed by ${C_INFO}macos-web-development${C_GOOD}, you should be able to browse ${C_INFO}http://{any}.test${C_GOOD} to visit ${C_INFO}$APACHE_DOC_ROOT/{any}/public${C_GOOD}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_0}"
+            echo -e "${C_EM}Apache was already installed and not configured during this run. If Apache and Dnsmasq was previously installed by ${C_INFO}macos-web-development${C_EM}, you should be able to browse ${C_INFO}http://{any}.test${C_EM} to visit ${C_INFO}$APACHE_DOC_ROOT/{any}/public${C_EM}. Additional vhost entries may be defined in ${C_INFO}$APACHE_PATH_VHOSTS${C_0}"
             echo ""
         fi
-        echo -e "${C_GOOD}Next: if you haven't already, you should enable a PHP version by running ${C_0}sphp $PHP_EXAMPLE_VERSION${C_GOOD} (use desired version).${C_0}"
+        if [ $NUM_PHP_VERSIONS -gt 0 ]; then
+            if ! $PHP_ENABLE; then
+                echo -e "${C_EM}If you haven't already, you should enable a PHP version by running ${C_0}sphp $PHP_EXAMPLE_VERSION"
+                echo ""
+            fi
+        fi
+        if $INSTALL_MYSQL; then
+            echo -e "${C_EM}Connect to MySQL using ${C_0}mysql -uroot${C_EM} (no password). If you want to secure your development database you can run ${C_0}mysql_secure_installation"
+            echo ""
+        fi
     else
-        echo -e "${C_GOOD}Did nothing since script defaults to dry run. Use ${C_INFO}--no-dry-run${C_GOOD} to actually do stuff.${C_0}"
-        echo -e "${C_GOOD}See ${C_INFO}--help${C_GOOD} for all options.${C_0}"
+        echo -e "${C_EM}Did nothing since script defaults to dry run. Use ${C_INFO}--no-dry-run${C_EM} to actually do stuff.${C_0}"
+        echo -e "${C_EM}See ${C_INFO}--help${C_EM} for all options.${C_0}"
+        echo ""
     fi
-    echo ""
 }
 
 
