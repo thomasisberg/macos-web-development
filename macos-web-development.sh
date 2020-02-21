@@ -409,7 +409,10 @@ do_homebrew () {
     fi
 
     if $HAS_BREW; then
-        brew tap homebrew/services
+        echo -e "${C_1}Installing Homebrew Services ...${C_0}"
+        if ! $DRY_RUN; then
+            brew tap homebrew/services
+        fi
     fi
 }
 
