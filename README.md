@@ -19,6 +19,8 @@ mkdir -p ~/WebServer/sites/cool/public && echo "<h1>Cool</h1>" >> ~/WebServer/si
 
 ... without reading tutorials and performing installation steps manually. 🤩
 
+You will also be able to create `http://cool.com.test` or `http:// cool.co.uk.test` or whatever.
+
 ### Also
 
 Because you want to manage your own stack of independent software, which you are free to mess around with in any way you want. *Macos-web-development* simply installs packages – mostly with [Homebrew](https://brew.sh) (which is also automatically installed) – and edits configuration files.
