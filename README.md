@@ -110,7 +110,7 @@ The following software is included in a full installation.
 - **PHP** versions 5.6 to 7.4
 - **sphp** a PHP switching script
 
-All of the above will only be installed if not already on the machine. However, **Apache** and versions of **PHP** will only be skipped by default if they were already installed *with Homebrew*. If not, they will be installed with Homebrew and replace existing ones, which will remain untouched on the system. Should you choose to uninstall with *Macos-web-development*, the existing software should "come alive" again.
+All of the above will only be installed if not already on the machine. However, **Apache** and versions of **PHP** will only be skipped by default if they were already installed *with Homebrew*. If not, they will be installed with Homebrew and replace existing ones, which will remain untouched on the system. Should you choose to uninstall with *Macos-web-development*, the existing software should "come alive" like nothing ever happened.
 
 
 ### Uninstallation
