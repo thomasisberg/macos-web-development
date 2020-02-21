@@ -8,13 +8,13 @@ Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 Because you want to
 
 ```bash
-./macos‑web‑development.sh ‑‑no‑dry‑run
+./macos-web-development.sh --no-dry-run
 ```
 
 ... and then instantly create a cool PHP based website at http://cool.test
 
 ```bash
-mkdir ‑p ~/WebServer/sites/cool/public && echo "<h1>Cool</h1>" >> ~/WebServer/sites/cool/public/index.php
+mkdir -p ~/WebServer/sites/cool/public && echo "<h1>Cool</h1>" >> ~/WebServer/sites/cool/public/index.php
 ```
 
 ... without reading tutorials and performing installation steps manually. 🤩
@@ -23,7 +23,7 @@ You will also be able to create http://cool.com.test or http://cool.co.uk.test o
 
 ### Also
 
-Because you want to manage your own stack of independent software, which you are free to mess around with in any way you want. *Macos‑web‑development* simply installs packages – mostly with [Homebrew](https://brew.sh) (which is also automatically installed) – and edits configuration files.
+Because you want to manage your own stack of independent software, which you are free to mess around with in any way you want. *Macos-web-development* simply installs packages – mostly with [Homebrew](https://brew.sh) (which is also automatically installed) – and edits configuration files.
 
 
 
@@ -32,13 +32,13 @@ Because you want to manage your own stack of independent software, which you are
 - **Browse** `http://{any}.test` to visit `~/{user}/WebServer/sites/{any}/public` (fully customizable path).
 - **Switch** between PHP versions 5.6 to 7.4 using command `sphp {version}`, for example `sphp 7.2`.
 - **Distribute** Apache vhosts configuraton and PHP ini from template files in repository. Simply adjust them to your needs before installation... or not. 🙃
-- **Opt put** of software you don't want. For example `‑‑no‑mysql`.
-- **Dry run** – check which software is already installed etc. This is the default behaviour, use `‑‑no‑dry‑run` to actually install stuff.
+- **Opt put** of software you don't want. For example `--no-mysql`.
+- **Dry run** – check which software is already installed etc. This is the default behaviour, use `--no-dry-run` to actually install stuff.
 - **Uninstall** – not sure when you would use this, but hey, it's a free world. 😀
 
 ### Apache configuration
 
-After installation the Apache vhosts configuration is found at `/usr/local/etc/httpd/extra/httpd‑vhosts.conf`. Change it whenever you want and restart Apache using `sudo apachectl ‑k restart`.
+After installation the Apache vhosts configuration is found at `/usr/local/etc/httpd/extra/httpd-vhosts.conf`. Change it whenever you want and restart Apache using `sudo apachectl -k restart`.
 
 
 ### PHP ini
@@ -51,21 +51,21 @@ The custom PHP ini file is installed as a symlink in each PHP version, pointing 
 #### Full installation (dry run with info)
 
 ```bash
-./macos‑web‑development.sh
+./macos-web-development.sh
 ```
 
 
 #### Full installation
 
 ```bash
-./macos‑web‑development.sh ‑‑no‑dry‑run
+./macos-web-development.sh --no-dry-run
 ```
 
 
 #### Installation with selected versions of PHP and no MySQL
 
 ```bash
-./macos‑web‑development.sh ‑‑no‑php‑5‑6 ‑‑no‑php‑7‑0 ‑‑no‑php‑7‑4 ‑‑no‑mysql ‑‑no‑dry‑run
+./macos-web-development.sh --no-php-5-6 --no-php-7-0 --no-php-7-4 --no-mysql --no-dry-run
 ```
 
 
@@ -74,14 +74,14 @@ The custom PHP ini file is installed as a symlink in each PHP version, pointing 
 Maybe you're poking around with your computer and want to *uninstall... install... uninstall... install...* 😎
 
 ```bash
-./macos‑web‑development.sh ‑‑uninstall ‑‑no‑dry‑run
+./macos-web-development.sh --uninstall --no-dry-run
 ```
 
 
 #### See the help for all details
 
 ```bash
-./macos‑web‑development.sh ‑‑help
+./macos-web-development.sh --help
 ```
 
 
@@ -89,7 +89,7 @@ Maybe you're poking around with your computer and want to *uninstall... install.
 
 The following software is included in a full installation.
 
-- **xcode‑select** Xcode command line developer tools. You probably already have this... feel free to pass `‑‑no‑xcode‑select`.
+- **xcode-select** Xcode command line developer tools. You probably already have this... feel free to pass `--no-xcode-select`.
 - **Homebrew**
 - **Openldap**
 - **Libiconv**
@@ -118,7 +118,7 @@ Option            | Description
 ‑‑no‑php‑7‑4      | Skip PHP 7.4
 ‑‑no‑php‑enable   | Don't enable the latest PHP version installed.
 ‑‑no‑xcode‑select | Skip Xcode command line developer tools.
-‑‑uninstall       | Uninstall. Takes no other options than `‑‑no‑dry‑run` and will uninstall everything – all versions of PHP etc.
+‑‑uninstall       | Uninstall. Takes no other options than `--no-dry-run` and will uninstall everything – all versions of PHP etc.
 
 
 ## Credit
