@@ -117,7 +117,7 @@ Option                      | Description
 --no-php-7-3                | Skip PHP 7.3
 --no-php-7-4                | Skip PHP 7.4
 --no-php-enable             | Don't enable the latest PHP version installed.
---no-xcode-select           | Skip Xcode command line developer tools.
+‑‑no‑xcode‑select           | Skip Xcode command line developer tools.
 --uninstall                 | Uninstall. Takes no other options than `--no-dry-run` and will uninstall everything – all versions of PHP etc.
 
 
