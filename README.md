@@ -27,7 +27,7 @@ Because you want to manage your own stack of independent software, which you are
 
 ## Features
 
-- Browse `http://{any}.test` to visit `~/{user}/WebServer/sites/{any}/public` (customizable path).
+- Browse `http://{any}.test` to visit `~/{user}/WebServer/sites/{any}/public` (fully customizable path).
 - Switch between PHP versions 5.6 to 7.4 using command `sphp {version}`, for example `sphp 7.2`.
 - Distributes Apache vhosts configuraton and PHP ini from example files in repository. Simply adjust them before installation. 
 - Install desired software only, by opting out.
