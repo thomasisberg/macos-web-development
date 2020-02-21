@@ -103,7 +103,7 @@ The following software is included in a full installation.
 ## Options
 
 Option            | Description
----               | ---
+:---              | :---
 -h or --help      | Display help.
 --no-apache       | Skip Apache.
 --no-dnsmasq      | Skip Dnsmasq. You just won't be able to browse `http://{any}.test` to automatically visit `~/WebServer/sites/{any}/public`. Virtual hosts can sill be managed manually.
