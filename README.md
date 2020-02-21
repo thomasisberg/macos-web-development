@@ -21,7 +21,7 @@ without reading tutorials and performing installation steps manually.
 
 ### Also
 
-Because you want to manage your own stack of independent software, which you are free to mess around with in any way you want.
+Because you want to manage your own stack of independent software, which you are free to mess around with in any way you want. *macos-web-development* mostly install stuff with *Homebrew* and edit configuration files.
 
 
 
