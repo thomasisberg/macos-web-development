@@ -145,7 +145,7 @@ Option                            | Description
 --no-php-enable   | Don't enable the latest PHP version installed.
 --no-xcode-select | Skip Xcode command line developer tools.
 --p-common       | Preset. Sets options `--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select`
---uninstall       | Uninstall. Takes no other options than `--no-dry-run` and will uninstall everything – all versions of PHP etc.
+--uninstall       | Uninstall. Takes no other options than `--no-dry-run` and will uninstall all versions of PHP etc.
 
 
 ## Credit
