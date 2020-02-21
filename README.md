@@ -19,7 +19,7 @@ mkdir -p ~/WebServer/sites/cool/public && echo "<h1>Cool</h1>" >> ~/WebServer/si
 
 ... without reading tutorials and performing installation steps manually. 🤩
 
-You will also be able to create `http://cool.com.test` or `http://cool.co.uk.test` or whatever.
+You will also be able to create http://cool.com.test or http://cool.co.uk.test or whatever.
 
 ### Also
 
