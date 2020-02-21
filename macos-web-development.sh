@@ -9,8 +9,8 @@
 #  • Libiconv
 #  • MySQL
 #  • Dnsmasq
-#  • Apache (via Homebrew)
-#  • PHP versions 5.6 to 7.4 (optional)
+#  • Apache
+#  • PHP versions 5.6 to 7.4
 #  • sphp – a PHP switcher script
 
 
