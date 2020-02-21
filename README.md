@@ -102,11 +102,10 @@ The following software is included in a full installation.
 
 ### Uninstallation
 
-Will not uninstall *xcode-select*, *Homebrew* and *Openldap*.
-
-Will not remove the server root folder at `~/WebServer/sites` (or custom folder), or any websites in there.
-
-Will uninstall the MySQL server, but will not remove the MySQL database.
+- Will not uninstall *xcode-select*, *Homebrew* and *Openldap*.
+- Will not remove the server root folder at `~/WebServer/sites` (or custom folder), or any websites in there.
+- Will uninstall the MySQL server, but will not remove the MySQL database.
+- Takes no other options than `--no-dry-run` and will uninstall all versions of PHP etc.
 
 
 
