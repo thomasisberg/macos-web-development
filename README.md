@@ -3,7 +3,7 @@
 Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 
 
-## Why install with macos-web-development?
+## Why macos-web-development?
 
 Because you want to
 
