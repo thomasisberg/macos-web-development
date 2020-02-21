@@ -3,12 +3,27 @@
 Installs MacOS web development AMP stack (Apache, MySQL and PHP).
 
 
+## Why install with macos-web-development?
+
+### Because you want to
+
+```bash
+./macos-web-development.sh --no-dry-run
+```
+
+And then instantly create a cool PHP based website website at http://cool.test
+
+```bash
+mkdir -p ~/WebServer/sites/cool/public && echo "<h1>Cool</h1>" >> ~/WebServer/sites/cool/public/index.php
+```
+
+
 ## Features
 
 - Browse `http://{any}.test` to visit `~/{user}/WebServer/sites/{any}/public` (customizable path).
-- Switch between PHP versions 5.6 to 7.4 using command `sphp 7.2` (use desired version).
+- Switch between PHP versions 5.6 to 7.4 using command `sphp {version}`, for example `sphp 7.2`.
 - Distributes Apache vhosts configuraton and PHP ini from example files in repository. Simply adjust them before installation. 
-- Only install desired software (Apache, MySQL, PHP etc) by opting out.
+- Install desired software only, by opting out.
 - Defaults to dry run – see what the script will do before actually doing it.
 - Uninstall. Don't know when you would use this, but hey, it's a free world. 😀
 
@@ -60,7 +75,7 @@ Maybe you're poking around with your computer and want to *uninstall... install.
 ```
 
 
-#### See the help for all details.
+#### See the help for all details
 
 ```bash
 ./macos-web-development.sh --help
@@ -77,9 +92,9 @@ The following software is included in a full installation.
 - **Libiconv**
 - **MySQL**
 - **Dnsmasq** to be able to browser `http://{any}.test`
-- **Apache** some say it's better with Homebrew than the MacOS default. 🤷‍♂️ Automagic PHP configuration and PHP switching with `sphp` only works with a Homebrew:ed Apache.
+- **Apache** some say it's better with Homebrew than the MacOS default. 🤷‍♂️ Script based PHP configuration and PHP switching with `sphp` only works with a Homebrew:ed Apache.
 - **PHP** versions 5.6 to 7.4
-- **sphp** a PHP switcher script
+- **sphp** a PHP switching script
 
 
 ## Credit
