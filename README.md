@@ -23,7 +23,7 @@ You will also be able to create http://cool.com.test or http://cool.co.uk.test o
 
 ### Also
 
-Because you want to manage your own stack of independent software, which you are free to mess around with in any way you want. *Macos-web-development* simply installs packages, mostly with [Homebrew](https://brew.sh) (which is also automatically installed), and edits configuration files.
+Because you want to manage your own stack of independent software, which you are free to mess around with in any way you want. Macos-web-development simply installs packages, mostly with [Homebrew](https://brew.sh) (which is also automatically installed), and edits configuration files.
 
 
 
@@ -32,9 +32,9 @@ Because you want to manage your own stack of independent software, which you are
 - **Browse** `http://{any}.test` to visit `~/{user}/WebServer/sites/{any}/public` (fully customizable path).
 - **Switch** between PHP versions 5.6 to 7.4 using command `sphp {version}`, for example `sphp 7.2`.
 - **Distribute** Apache vhosts configuraton and PHP ini from template files in repository. Simply adjust them to your needs before installation... or not. 🙃
-- **Opt put** of software you don't want. For example `--no-mysql`.
+- **Opt out** of software you don't want. For example `--no-mysql`.
 - **Dry run** – check which software is already installed etc. This is the default behaviour, use `--no-dry-run` to actually install stuff.
-- **Uninstall** – not sure when you would use this, but hey, it's a free world. 😀
+- **Uninstall** – not sure when you would use this, but hey, it's a *freeeeee world*. 😀
 
 ### Apache configuration
 
@@ -118,7 +118,7 @@ The following software is included in a full installation.
 - **PHP** versions 5.6 to 7.4
 - **sphp** a PHP switching script
 
-All of the above will only be installed if not already on the machine. However, **Apache** and versions of **PHP** will only be skipped by default if they were already installed *with Homebrew*. If not, they will be installed with Homebrew and replace existing ones, which will remain untouched on the system. Should you choose to uninstall with *Macos-web-development*, the existing software should "come alive" like nothing ever happened.
+All of the above will only be installed if not already on the machine. However, **Apache** and versions of **PHP** will only be skipped by default if they were already installed *with Homebrew*. If not, they will be installed with Homebrew and replace existing ones, which will remain untouched on the system. Should you choose to uninstall with macos-web-development, the existing software should be brought back to life, as if nothing ever happened.
 
 
 ### Uninstallation
