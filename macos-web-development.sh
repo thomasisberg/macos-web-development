@@ -315,7 +315,7 @@ do_uninstall () {
                 sudo rm -rf /usr/local/var/run/dnsmasq
             fi
         else
-            echo -e "${C_2}Dnsmasq not installed${C_0}"
+            echo -e "${C_2}Dnsmasq (via Homebrew) not installed.${C_0}"
         fi
     fi
 
@@ -329,7 +329,7 @@ do_uninstall () {
             fi
             echo -e "${C_EM}Uninstalled package, but did not remove database files. Remove them with ${C_0}rm -rf /usr/local/var/mysql${C_EM} if desired."
         else
-            echo -e "${C_2}MySQL not installed.${C_0}"
+            echo -e "${C_2}MySQL (via Homebrew) not installed.${C_0}"
         fi
     fi
 
@@ -342,7 +342,7 @@ do_uninstall () {
             brew uninstall libiconv
         fi
     else
-        echo -e "${C_2}Libiconv not installed with Homebrew.${C_0}"
+        echo -e "${C_2}Libiconv (via Homebrew) not installed.${C_0}"
     fi
 
     # Openldap
