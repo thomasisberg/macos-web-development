@@ -24,6 +24,11 @@ INSTALL_DNSMASQ=true
 INSTALL_MYSQL=true
 INSTALL_PHP=true
 INSTALL_XCODE=true
+ONLY_APACHE=false
+ONLY_DNSMASQ=false
+ONLY_MYSQL=false
+ONLY_PHP=false
+ONLY_XCODE=false
 PHP_5_6=true
 PHP_7_0=true
 PHP_7_1=true
@@ -53,6 +58,11 @@ do
     --no-php-7-4)      PHP_7_4=false ;;
     --no-php-enable)   PHP_ENABLE=false ;;
     --no-xcode-select) INSTALL_XCODE=false ;;
+    --only-apache)     ONLY_APACHE=true ;;
+    --only-dnsmasq)    ONLY_DNSMASQ=true ;;
+    --only-mysql)      ONLY_MYSQL=true ;;
+    --only-php)        ONLY_PHP=true ;;
+    --only-xcode)      ONLY_XCODE=true ;;
     --p-common)        PRESET_COMMON=true ;;
     --p-minimal)       PRESET_MINIMAL=true ;;
     --uninstall)       UNINSTALL=true ;;
@@ -106,6 +116,31 @@ elif $PRESET_MINIMAL; then
     PHP_7_3=false
     PHP_7_4=false
     INSTALL_XCODE=false
+elif $ONLY_APACHE; then
+    INSTALL_DNSMASQ=false
+    INSTALL_MYSQL=false
+    INSTALL_PHP=false
+    INSTALL_XCODE=false
+elif $ONLY_DNSMASQ; then
+    INSTALL_APACHE=false
+    INSTALL_MYSQL=false
+    INSTALL_PHP=false
+    INSTALL_XCODE=false
+elif $ONLY_MYSQL; then
+    INSTALL_APACHE=false
+    INSTALL_DNSMASQ=false
+    INSTALL_PHP=false
+    INSTALL_XCODE=false
+elif $ONLY_PHP; then
+    INSTALL_APACHE=false
+    INSTALL_DNSMASQ=false
+    INSTALL_MYSQL=false
+    INSTALL_XCODE=false
+elif $ONLY_XCODE; then
+    INSTALL_APACHE=false
+    INSTALL_DNSMASQ=false
+    INSTALL_MYSQL=false
+    INSTALL_PHP=false
 fi
 
 
@@ -144,6 +179,7 @@ if $HELP; then
     echo -e "${C_INFO}--no-php-7-4       ${C_EM}Skip PHP 7.4${C_0}"
     echo -e "${C_INFO}--no-php-enable    ${C_EM}Will not enable the latest PHP version installed${C_0}"
     echo -e "${C_INFO}--no-xcode-select  ${C_EM}Skip xcode-select${C_0}"
+    echo -e "${C_INFO}--only-dnsmasq     ${C_EM}Only install Dnsmasq${C_0}"
     echo -e "${C_INFO}--p-common         ${C_EM}Sets options ${C_0}--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select"
     echo -e "${C_INFO}--p-minimal        ${C_EM}Sets options ${C_0}--no-mysql --no-php-5-6 --no-php-7-0 --no-php-7-1 --no-php-7-3 --no--php-7-4 --no-xcode-select"
     echo -e "${C_INFO}--uninstall        ${C_EM}Uninstall stuff, but leave some stuff${C_0}"
