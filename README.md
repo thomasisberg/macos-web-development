@@ -175,6 +175,6 @@ Script by Andy Miller: [Easy Brew PHP version switching](https://gist.github.com
 
 ### MacOS
 
-Successfully tested with a fresh installation of **MacOS Catalina** *(10.15.3)*
+Successfully tested with a fresh installation of **macOS Catalina** *(10.15.3)*
 
-Probably works with earlier versions too... 🙄
+Tested without success on **macOS Sierra** *(10.12.6)*.
