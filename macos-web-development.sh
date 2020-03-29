@@ -43,29 +43,29 @@ UNINSTALL=false
 while test $# != 0
 do
     case "$1" in
-    -h)                HELP=true ;;
-    --help)            HELP=true ;;
-    --no-apache)       INSTALL_APACHE=false ;;
-    --no-dnsmasq)      INSTALL_DNSMASQ=false ;;
-    --no-dry-run)      DRY_RUN=false ;;
-    --no-mysql)        INSTALL_MYSQL=false ;;
-    --no-php)          INSTALL_PHP=false ;;
-    --no-php-5-6)      PHP_5_6=false ;;
-    --no-php-7-0)      PHP_7_0=false ;;
-    --no-php-7-1)      PHP_7_1=false ;;
-    --no-php-7-2)      PHP_7_2=false ;;
-    --no-php-7-3)      PHP_7_3=false ;;
-    --no-php-7-4)      PHP_7_4=false ;;
-    --no-php-enable)   PHP_ENABLE=false ;;
-    --no-xcode-select) INSTALL_XCODE=false ;;
-    --only-apache)     ONLY_APACHE=true ;;
-    --only-dnsmasq)    ONLY_DNSMASQ=true ;;
-    --only-mysql)      ONLY_MYSQL=true ;;
-    --only-php)        ONLY_PHP=true ;;
-    --only-xcode)      ONLY_XCODE=true ;;
-    --p-common)        PRESET_COMMON=true ;;
-    --p-minimal)       PRESET_MINIMAL=true ;;
-    --uninstall)       UNINSTALL=true ;;
+    -h)                   HELP=true ;;
+    --help)               HELP=true ;;
+    --no-apache)          INSTALL_APACHE=false ;;
+    --no-dnsmasq)         INSTALL_DNSMASQ=false ;;
+    --no-dry-run)         DRY_RUN=false ;;
+    --no-mysql)           INSTALL_MYSQL=false ;;
+    --no-php)             INSTALL_PHP=false ;;
+    --no-php-5-6)         PHP_5_6=false ;;
+    --no-php-7-0)         PHP_7_0=false ;;
+    --no-php-7-1)         PHP_7_1=false ;;
+    --no-php-7-2)         PHP_7_2=false ;;
+    --no-php-7-3)         PHP_7_3=false ;;
+    --no-php-7-4)         PHP_7_4=false ;;
+    --no-php-enable)      PHP_ENABLE=false ;;
+    --no-xcode-select)    INSTALL_XCODE=false ;;
+    --only-apache)        ONLY_APACHE=true ;;
+    --only-dnsmasq)       ONLY_DNSMASQ=true ;;
+    --only-mysql)         ONLY_MYSQL=true ;;
+    --only-php)           ONLY_PHP=true ;;
+    --only-xcode-select)  ONLY_XCODE=true ;;
+    --p-common)           PRESET_COMMON=true ;;
+    --p-minimal)          PRESET_MINIMAL=true ;;
+    --uninstall)          UNINSTALL=true ;;
     esac
     shift
 done
@@ -165,24 +165,28 @@ if $HELP; then
     echo -e "${C_1}After installation you can run ${C_0}sphp 7.2${C_1} to switch PHP version (use desired version). ${C_0}sphp${C_1} only works with Apache from Homebrew.${C_0}"
     echo ""
     echo -e "${C_1}Options:${C_0}"
-    echo -e "${C_INFO}-h, --help         ${C_EM}Display this help${C_0}"
-    echo -e "${C_INFO}--no-apache        ${C_EM}Skip Apache${C_0}"
-    echo -e "${C_INFO}--no-dnsmasq       ${C_EM}Skip Dnsmasq${C_0}"
-    echo -e "${C_INFO}--no-dry-run       ${C_EM}Disable dry run and actually install stuff${C_0}"
-    echo -e "${C_INFO}--no-mysql         ${C_EM}Skip MySQL${C_0}"
-    echo -e "${C_INFO}--no-php           ${C_EM}Skip PHP${C_0}"
-    echo -e "${C_INFO}--no-php-5-6       ${C_EM}Skip PHP 5.6${C_0}"
-    echo -e "${C_INFO}--no-php-7-0       ${C_EM}Skip PHP 7.0${C_0}"
-    echo -e "${C_INFO}--no-php-7-1       ${C_EM}Skip PHP 7.1${C_0}"
-    echo -e "${C_INFO}--no-php-7-2       ${C_EM}Skip PHP 7.2${C_0}"
-    echo -e "${C_INFO}--no-php-7-3       ${C_EM}Skip PHP 7.3${C_0}"
-    echo -e "${C_INFO}--no-php-7-4       ${C_EM}Skip PHP 7.4${C_0}"
-    echo -e "${C_INFO}--no-php-enable    ${C_EM}Will not enable the latest PHP version installed${C_0}"
-    echo -e "${C_INFO}--no-xcode-select  ${C_EM}Skip xcode-select${C_0}"
-    echo -e "${C_INFO}--only-dnsmasq     ${C_EM}Only install Dnsmasq${C_0}"
-    echo -e "${C_INFO}--p-common         ${C_EM}Sets options ${C_0}--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select"
-    echo -e "${C_INFO}--p-minimal        ${C_EM}Sets options ${C_0}--no-mysql --no-php-5-6 --no-php-7-0 --no-php-7-1 --no-php-7-3 --no--php-7-4 --no-xcode-select"
-    echo -e "${C_INFO}--uninstall        ${C_EM}Uninstall stuff, but leave some stuff${C_0}"
+    echo -e "${C_INFO}-h, --help            ${C_EM}Display this help${C_0}"
+    echo -e "${C_INFO}--no-apache           ${C_EM}Skip Apache${C_0}"
+    echo -e "${C_INFO}--no-dnsmasq          ${C_EM}Skip Dnsmasq${C_0}"
+    echo -e "${C_INFO}--no-dry-run          ${C_EM}Disable dry run and actually install stuff${C_0}"
+    echo -e "${C_INFO}--no-mysql            ${C_EM}Skip MySQL${C_0}"
+    echo -e "${C_INFO}--no-php              ${C_EM}Skip PHP${C_0}"
+    echo -e "${C_INFO}--no-php-5-6          ${C_EM}Skip PHP 5.6${C_0}"
+    echo -e "${C_INFO}--no-php-7-0          ${C_EM}Skip PHP 7.0${C_0}"
+    echo -e "${C_INFO}--no-php-7-1          ${C_EM}Skip PHP 7.1${C_0}"
+    echo -e "${C_INFO}--no-php-7-2          ${C_EM}Skip PHP 7.2${C_0}"
+    echo -e "${C_INFO}--no-php-7-3          ${C_EM}Skip PHP 7.3${C_0}"
+    echo -e "${C_INFO}--no-php-7-4          ${C_EM}Skip PHP 7.4${C_0}"
+    echo -e "${C_INFO}--no-php-enable       ${C_EM}Will not enable the latest PHP version installed${C_0}"
+    echo -e "${C_INFO}--no-xcode-select     ${C_EM}Skip xcode-select${C_0}"
+    echo -e "${C_INFO}--only-apache         ${C_EM}Only install Apache${C_0}"
+    echo -e "${C_INFO}--only-dnsmasq        ${C_EM}Only install Dnsmasq${C_0}"
+    echo -e "${C_INFO}--only-mysql          ${C_EM}Only install MySQL${C_0}"
+    echo -e "${C_INFO}--only-php            ${C_EM}Only install PHP${C_0}"
+    echo -e "${C_INFO}--only-xcode-select   ${C_EM}Only install xcode-select${C_0}"
+    echo -e "${C_INFO}--p-common            ${C_EM}Sets options ${C_0}--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select"
+    echo -e "${C_INFO}--p-minimal           ${C_EM}Sets options ${C_0}--no-mysql --no-php-5-6 --no-php-7-0 --no-php-7-1 --no-php-7-3 --no--php-7-4 --no-xcode-select"
+    echo -e "${C_INFO}--uninstall           ${C_EM}Uninstall stuff, but leave some stuff${C_0}"
     echo ""
     exit
 fi
