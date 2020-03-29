@@ -24,7 +24,11 @@ INSTALL_DNSMASQ=true
 INSTALL_MYSQL=true
 INSTALL_PHP=true
 INSTALL_XCODE=true
+ONLY_APACHE=false
 ONLY_DNSMASQ=false
+ONLY_MYSQL=false
+ONLY_PHP=false
+ONLY_XCODE=false
 PHP_5_6=true
 PHP_7_0=true
 PHP_7_1=true
@@ -54,7 +58,11 @@ do
     --no-php-7-4)      PHP_7_4=false ;;
     --no-php-enable)   PHP_ENABLE=false ;;
     --no-xcode-select) INSTALL_XCODE=false ;;
-    --only-dnsmasq)     ONLY_DNSMASQ=true ;;
+    --only-apache)     ONLY_APACHE=true ;;
+    --only-dnsmasq)    ONLY_DNSMASQ=true ;;
+    --only-mysql)      ONLY_MYSQL=true ;;
+    --only-php)        ONLY_PHP=true ;;
+    --only-xcode)      ONLY_XCODE=true ;;
     --p-common)        PRESET_COMMON=true ;;
     --p-minimal)       PRESET_MINIMAL=true ;;
     --uninstall)       UNINSTALL=true ;;
@@ -108,11 +116,31 @@ elif $PRESET_MINIMAL; then
     PHP_7_3=false
     PHP_7_4=false
     INSTALL_XCODE=false
+elif $ONLY_APACHE; then
+    INSTALL_DNSMASQ=false
+    INSTALL_MYSQL=false
+    INSTALL_PHP=false
+    INSTALL_XCODE=false
 elif $ONLY_DNSMASQ; then
     INSTALL_APACHE=false
     INSTALL_MYSQL=false
     INSTALL_PHP=false
     INSTALL_XCODE=false
+elif $ONLY_MYSQL; then
+    INSTALL_APACHE=false
+    INSTALL_DNSMASQ=false
+    INSTALL_PHP=false
+    INSTALL_XCODE=false
+elif $ONLY_PHP; then
+    INSTALL_APACHE=false
+    INSTALL_DNSMASQ=false
+    INSTALL_MYSQL=false
+    INSTALL_XCODE=false
+elif $ONLY_XCODE; then
+    INSTALL_APACHE=false
+    INSTALL_DNSMASQ=false
+    INSTALL_MYSQL=false
+    INSTALL_PHP=false
 fi
 
 
