@@ -140,7 +140,7 @@ Option                                    | D
 :---                  | :---
 `-h` or `--help`      | Display help.
 `--no-apache`         | Skip Apache.
-`--no-dnsmasq`        | Skip Dnsmasq. You just won't be able to browse `http://{any}.test` to automatically visit `~/WebServer/sites/{any}/public`. Virtual hosts can sill be managed manually.
+`--no-dnsmasq`        | Skip Dnsmasq. You just won't be able to browse `http://{any}.test` to automatically visit `~/WebServer/sites/{any}/public`. Virtual hosts can still be managed manually.
 `--no-dry-run`        | Disable dry run and actually install stuff.
 `--no-mysql`          | Skip MySQL.
 `--no-php`            | Skip PHP.
