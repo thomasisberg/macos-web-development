@@ -152,6 +152,11 @@ Option                                    | D
 `--no-php-7-4`        | Skip PHP 7.4
 `--no-php-enable`     | Don't automatically enable the latest version of PHP in currently executing installation.
 `--no-xcode-select`   | Skip Xcode command line developer tools.
+`--only-apache`       | Only install Apache.
+`--only-dnsmasq`      | Only install Dnsmasq.
+`--only-mysql`        | Only install MySQL.
+`--only-php`          | Only install PHP.
+`--only-xcode`        | Only install Xcode command line tools.
 `--p-common`          | Common preset. Sets options `--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select`
 `--p-minimal`         | Minimal preset. Sets options `--no-mysql --no-php-5-6 --no-php-7-0 --no-php-7-1 --no-php-7-3 --no--php-7-4 --no-xcode-select`
 `--uninstall`         | Uninstall. Takes no other options than `--no-dry-run` and will uninstall all versions of PHP etc.
