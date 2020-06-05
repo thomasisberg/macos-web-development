@@ -585,6 +585,7 @@ do_apache () {
         if ! $DRY_RUN; then
             brew install httpd
             brew services start httpd
+            sudo launchctl load -w /System/Library/LaunchDaemons/org.apache.httpd.plist
             if [ -f "$APACHE_PATH_CONF" ]; then
                 APACHE_PATH_CONF_EXISTS=true
             fi
