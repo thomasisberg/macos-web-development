@@ -584,7 +584,7 @@ do_apache () {
         echo -e "${C_1}Installing Apache (via Homebrew) ...${C_0}"
         if ! $DRY_RUN; then
             brew install httpd
-            brew services start httpd
+            sudo apachectl -k start
             sudo launchctl load -w /System/Library/LaunchDaemons/org.apache.httpd.plist
             if [ -f "$APACHE_PATH_CONF" ]; then
                 APACHE_PATH_CONF_EXISTS=true
