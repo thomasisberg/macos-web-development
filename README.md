@@ -167,8 +167,8 @@ Option                                    | D
 `--only-php-8-0`      | Only install PHP 8.0. Combine with `--only-php` if desired.
 `--only-php-8-1`      | Only install PHP 8.1. Combine with `--only-php` if desired.
 `--only-xcode-select` | Only install Xcode command line tools.
-`--p-common`          | Common preset. Sets options `--no-php-5-6 --no-php-7-0 --no--php-7-1 --no--php-7-2 --no--php-7-3 --no--php-8-0 --no-xcode-select`
-`--p-minimal`         | Minimal preset. Sets options `--no-mysql --no-php-5-6 --no-php-7-0 --no-php-7-1 --no-php-7-3 --no--php-7-4 --no--php-8-0 --no-xcode-select`
+`--p-common`          | Common preset. Sets options `--only-php-7-4 --no-xcode-select`
+`--p-minimal`         | Minimal preset. Sets options `--no-mysql --only-php-7-4 --no-xcode-select`
 `--uninstall`         | Uninstall. Takes no other options than `--no-dry-run` and will uninstall all versions of PHP etc.
 
 
