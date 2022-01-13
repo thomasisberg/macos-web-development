@@ -38,7 +38,7 @@ Because you want to manage your own stack of independent software, which you are
 
 ### Apache configuration
 
-After installation the Apache vhosts configuration is found at `/usr/local/etc/httpd/extra/httpd-vhosts.conf`. Change it whenever you want and restart Apache using `sudo apachectl -k restart`.
+After installation the Apache vhosts configuration is found at `/usr/local/etc/httpd/extra/httpd-vhosts.conf`. Change it whenever you want and restart Apache using `brew services restart httpd`.
 
 
 ### PHP ini
