@@ -115,7 +115,7 @@ The following software is included in a full installation.
 - **MySQL**
 - **Dnsmasq** to be able to browse `http://{any}.test`
 - **Apache** some say it's better with Homebrew than the MacOS default. 🤷‍♂️ Script based Apache PHP configuration (and PHP switching with `sphp`) only works with a Homebrew:ed Apache.
-- **PHP** versions 5.6 to 7.4
+- **PHP** versions 5.6 to 8.1
 - **sphp** a PHP switching script
 
 All of the above will only be installed if not already on the machine. However, **Apache** and versions of **PHP** will only be skipped by default if they were already installed with **Homebrew**. If not, they will be installed with Homebrew and replace existing ones, which will remain untouched on the system. Should you choose to uninstall with macos-web-development, the existing software should be brought back to life, as if nothing ever happened.
