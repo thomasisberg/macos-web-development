@@ -28,6 +28,14 @@ ONLY_APACHE=false
 ONLY_DNSMASQ=false
 ONLY_MYSQL=false
 ONLY_PHP=false
+ONLY_PHP_5_6=false
+ONLY_PHP_7_0=false
+ONLY_PHP_7_1=false
+ONLY_PHP_7_2=false
+ONLY_PHP_7_3=false
+ONLY_PHP_7_4=false
+ONLY_PHP_8_0=false
+ONLY_PHP_8_1=false
 ONLY_XCODE=false
 PHP_5_6=true
 PHP_7_0=true
@@ -36,6 +44,7 @@ PHP_7_2=true
 PHP_7_3=true
 PHP_7_4=true
 PHP_8_0=true
+PHP_8_1=true
 PHP_ENABLE=true
 PRESET_COMMON=false
 PRESET_MINIMAL=false
@@ -58,12 +67,21 @@ do
     --no-php-7-3)         PHP_7_3=false ;;
     --no-php-7-4)         PHP_7_4=false ;;
     --no-php-8-0)         PHP_8_0=false ;;
+    --no-php-8-1)         PHP_8_1=false ;;
     --no-php-enable)      PHP_ENABLE=false ;;
     --no-xcode-select)    INSTALL_XCODE=false ;;
     --only-apache)        ONLY_APACHE=true ;;
     --only-dnsmasq)       ONLY_DNSMASQ=true ;;
     --only-mysql)         ONLY_MYSQL=true ;;
     --only-php)           ONLY_PHP=true ;;
+    --only-php-5-6)       ONLY_PHP_5_6=true ;;
+    --only-php-7-0)       ONLY_PHP_7_0=true ;;
+    --only-php-7-1)       ONLY_PHP_7_1=true ;;
+    --only-php-7-2)       ONLY_PHP_7_2=true ;;
+    --only-php-7-3)       ONLY_PHP_7_3=true ;;
+    --only-php-7-4)       ONLY_PHP_7_4=true ;;
+    --only-php-8-0)       ONLY_PHP_8_0=true ;;
+    --only-php-8-1)       ONLY_PHP_8_1=true ;;
     --only-xcode-select)  ONLY_XCODE=true ;;
     --p-common)           PRESET_COMMON=true ;;
     --p-minimal)          PRESET_MINIMAL=true ;;
@@ -106,21 +124,11 @@ C_EM="$C_BOLD_CYAN"
 
 # Default
 if $PRESET_COMMON; then
-    PHP_5_6=false
-    PHP_7_0=false
-    PHP_7_1=false
-    PHP_7_2=false
-    PHP_7_3=false
-    PHP_8_0=false
+    ONLY_PHP_7_4=true
     INSTALL_XCODE=false
 elif $PRESET_MINIMAL; then
     INSTALL_MYSQL=false
-    PHP_5_6=false
-    PHP_7_0=false
-    PHP_7_1=false
-    PHP_7_3=false
-    PHP_7_4=false
-    PHP_8_0=false
+    ONLY_PHP_7_4=true
     INSTALL_XCODE=false
 elif $ONLY_APACHE; then
     INSTALL_DNSMASQ=false
@@ -184,15 +192,24 @@ if $HELP; then
     echo -e "${C_INFO}--no-php-7-3          ${C_EM}Skip PHP 7.3${C_0}"
     echo -e "${C_INFO}--no-php-7-4          ${C_EM}Skip PHP 7.4${C_0}"
     echo -e "${C_INFO}--no-php-8-0          ${C_EM}Skip PHP 8.0${C_0}"
+    echo -e "${C_INFO}--no-php-8-1          ${C_EM}Skip PHP 8.1${C_0}"
     echo -e "${C_INFO}--no-php-enable       ${C_EM}Will not enable the latest PHP version installed${C_0}"
     echo -e "${C_INFO}--no-xcode-select     ${C_EM}Skip xcode-select${C_0}"
     echo -e "${C_INFO}--only-apache         ${C_EM}Only install Apache${C_0}"
     echo -e "${C_INFO}--only-dnsmasq        ${C_EM}Only install Dnsmasq${C_0}"
     echo -e "${C_INFO}--only-mysql          ${C_EM}Only install MySQL${C_0}"
     echo -e "${C_INFO}--only-php            ${C_EM}Only install PHP${C_0}"
+    echo -e "${C_INFO}--only-php-5-6        ${C_EM}Only install PHP 5.6. Combine with --only-php if desired${C_0}"
+    echo -e "${C_INFO}--only-php-7-0        ${C_EM}Only install PHP 7.0. Combine with --only-php if desired${C_0}"
+    echo -e "${C_INFO}--only-php-7-1        ${C_EM}Only install PHP 7.1. Combine with --only-php if desired${C_0}"
+    echo -e "${C_INFO}--only-php-7-2        ${C_EM}Only install PHP 7.2. Combine with --only-php if desired${C_0}"
+    echo -e "${C_INFO}--only-php-7-3        ${C_EM}Only install PHP 7.3. Combine with --only-php if desired${C_0}"
+    echo -e "${C_INFO}--only-php-7-4        ${C_EM}Only install PHP 7.4. Combine with --only-php if desired${C_0}"
+    echo -e "${C_INFO}--only-php-8-0        ${C_EM}Only install PHP 8.0. Combine with --only-php if desired${C_0}"
+    echo -e "${C_INFO}--only-php-8-1        ${C_EM}Only install PHP 8.1. Combine with --only-php if desired${C_0}"
     echo -e "${C_INFO}--only-xcode-select   ${C_EM}Only install xcode-select${C_0}"
-    echo -e "${C_INFO}--p-common            ${C_EM}Sets options ${C_0}--no-php-5-6 --no-php-7-0 --no--php-7-1 --no--php-7-2 --no--php-7-3 --no--php-8-0 --no-xcode-select"
-    echo -e "${C_INFO}--p-minimal           ${C_EM}Sets options ${C_0}--no-mysql --no-php-5-6 --no-php-7-0 --no-php-7-1 --no-php-7-3 --no--php-7-4 --no--php-8-0 --no-xcode-select"
+    echo -e "${C_INFO}--p-common            ${C_EM}Sets options ${C_0}--only-php-7-4 --no-xcode-select"
+    echo -e "${C_INFO}--p-minimal           ${C_EM}Sets options ${C_0}--no-mysql --only-php-7-4 --no-xcode-select"
     echo -e "${C_INFO}--uninstall           ${C_EM}Uninstall stuff, but leave some stuff${C_0}"
     echo ""
     exit
@@ -204,9 +221,7 @@ fi
 # ----------------------------------------------------------
 
 MACOS_VERSION="$(sw_vers -productVersion)"
-MACOS_VERSION_MAJOR="$(echo $MACOS_VERSION | awk -F. '{ print $1; }')"
-# Convert string to integer.
-MACOS_VERSION_MAJOR=$(($MACOS_VERSION_MAJOR))
+MACOS_VERSION_MAJOR="$(echo $MACOS_VERSION | cut -d. -f1)"
 
 PWD=$(pwd)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
@@ -223,16 +238,26 @@ PHP_INI_DEST="$PHP_INI_DIR/php.ini"
 PHP_LOG_DIR="/var/log/php"
 
 # Create list of PHP versions, based on options.
-ALL_PHP_VERSIONS=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
-ALL_PHP_FLAGS=($PHP_5_6 $PHP_7_0 $PHP_7_1 $PHP_7_2 $PHP_7_3 $PHP_7_4 $PHP_8_0)
+ALL_PHP_VERSIONS=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0" "8.1")
+ALL_ONLY_PHP_FLAGS=($ONLY_PHP_5_6 $ONLY_PHP_7_0 $ONLY_PHP_7_1 $ONLY_PHP_7_2 $ONLY_PHP_7_3 $ONLY_PHP_7_4 $ONLY_PHP_8_0 $ONLY_PHP_8_1)
+ALL_PHP_FLAGS=($PHP_5_6 $PHP_7_0 $PHP_7_1 $PHP_7_2 $PHP_7_3 $PHP_7_4 $PHP_8_0 $PHP_8_1)
 PHP_VERSIONS=()
-for i in "${!ALL_PHP_FLAGS[@]}"; do
-    if ${ALL_PHP_FLAGS[$i]}; then
+for i in "${!ALL_ONLY_PHP_FLAGS[@]}"; do
+    if ${ALL_ONLY_PHP_FLAGS[$i]}; then
         PHP_VERSIONS+=("${ALL_PHP_VERSIONS[$i]}")
     fi
 done
-PHP_EXAMPLE_VERSION="7.4"
 NUM_PHP_VERSIONS=${#PHP_VERSIONS[@]}
+if [ $NUM_PHP_VERSIONS == 0 ]; then
+    for i in "${!ALL_PHP_FLAGS[@]}"; do
+        if ${ALL_PHP_FLAGS[$i]}; then
+            PHP_VERSIONS+=("${ALL_PHP_VERSIONS[$i]}")
+        fi
+    done
+
+    NUM_PHP_VERSIONS=${#PHP_VERSIONS[@]}
+fi
+PHP_EXAMPLE_VERSION="7.4"
 if [ $NUM_PHP_VERSIONS -gt 0 ]; then
     LATEST_PHP_VERSION="${PHP_VERSIONS[$NUM_PHP_VERSIONS-1]}"
     PHP_EXAMPLE_VERSION="$LATEST_PHP_VERSION"
@@ -241,9 +266,6 @@ fi
 # Use MariaDB instead of MySQL.
 # MYSQL_PACKAGE="mysql"
 MYSQL_PACKAGE="mariadb"
-
-# Set Homebrew prefix (path) and related variables.
-set_homebrew_path
 
 
 # ----------------------------------------------------------
@@ -267,6 +289,9 @@ set_homebrew_path () {
 
     MYSQL_DB_PATH="$HOMEBREW_PATH/var"
 }
+
+# Set Homebrew prefix (path) and related variables.
+set_homebrew_path
 
 # ----------------------------------------------------------
 # Initial message for dry run.
@@ -342,6 +367,10 @@ do_uninstall () {
                 echo -e "${C_2}php$php_version not installed.${C_0}"
             fi
         done
+
+        if ! $DRY_RUN; then
+            sudo rm $HOMEBREW_PATH/etc/php
+        fi
     fi
 
     # PHP ini file.
@@ -387,6 +416,7 @@ do_uninstall () {
                 sudo brew services stop dnsmasq
                 sudo rm -rf /etc/resolver
                 sudo rm $HOMEBREW_PATH/etc/dnsmasq.conf
+                sudo rm $HOMEBREW_PATH/etc/dnsmasq.d
                 brew uninstall dnsmasq
                 sudo rm -rf $HOMEBREW_PATH/var/run/dnsmasq
             fi
@@ -569,6 +599,12 @@ do_mysql () {
         if ! $DRY_RUN; then
             brew install $MYSQL_PACKAGE
             brew services start $MYSQL_PACKAGE
+
+            # By default sudo is required to login as root. Disable by setting empty password.
+            # Make sure server is really available.
+            mysql.server start
+            sudo mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password USING PASSWORD('');"
+            sudo mysql -u root -e "FLUSH PRIVILEGES;"
         fi
     else
         echo -e "${C_2}MySQL already installed.${C_0}"
