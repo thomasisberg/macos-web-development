@@ -48,7 +48,7 @@ if [[ $(echo "$php_version" | sed 's/^php@//' | sed 's/\.//') -ge 70 ]]; then
 fi
 
 apache_change=1
-apache_conf_path="/usr/local/etc/httpd/httpd.conf"
+apache_conf_path="$(brew --prefix)" + "/etc/httpd/httpd.conf"
 apache_php_mod_path="$php_opt_path$php_version$apache_php_lib_path"
 
 valet_restart=0
@@ -146,7 +146,8 @@ $comment_apache_module_string\\
             done
             sudo sed -i.bak "s/\#LoadModule $php_module $apache_php_mod_path/LoadModule $php_module $apache_php_mod_path/g" $apache_conf_path
             echo "Restarting apache"
-            sudo apachectl -k restart
+            # sudo apachectl -k restart
+            brew services restart httpd
         fi
 
         # Switch valet

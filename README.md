@@ -138,7 +138,7 @@ Should you decide that you need PHP 7.4 after installation without it, just exec
 
 Option                                    | Description
 :---                  | :---
-`-h` or `--help`      | Display help.
+`-h` or `--help`      | Display help.
 `--no-apache`         | Skip Apache.
 `--no-dnsmasq`        | Skip Dnsmasq. You just won't be able to browse `http://{any}.test` to automatically visit `~/WebServer/sites/{any}/public`. Virtual hosts can still be managed manually.
 `--no-dry-run`        | Disable dry run and actually install stuff.
@@ -150,6 +150,7 @@ Option                                    | D
 `--no-php-7-2`        | Skip PHP 7.2
 `--no-php-7-3`        | Skip PHP 7.3
 `--no-php-7-4`        | Skip PHP 7.4
+`--no-php-8-0`        | Skip PHP 8.0
 `--no-php-enable`     | Don't automatically enable the latest version of PHP in currently executing installation.
 `--no-xcode-select`   | Skip Xcode command line developer tools.
 `--only-apache`       | Only install Apache.
@@ -157,8 +158,8 @@ Option                                    | D
 `--only-mysql`        | Only install MySQL.
 `--only-php`          | Only install PHP.
 `--only-xcode-select` | Only install Xcode command line tools.
-`--p-common`          | Common preset. Sets options `--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select`
-`--p-minimal`         | Minimal preset. Sets options `--no-mysql --no-php-5-6 --no-php-7-0 --no-php-7-1 --no-php-7-3 --no--php-7-4 --no-xcode-select`
+`--p-common`          | Common preset. Sets options `--no-php-5-6 --no-php-7-0 --no--php-7-1 --no--php-7-2 --no--php-7-3 --no--php-8-0 --no-xcode-select`
+`--p-minimal`         | Minimal preset. Sets options `--no-mysql --no-php-5-6 --no-php-7-0 --no-php-7-1 --no-php-7-3 --no--php-7-4 --no--php-8-0 --no-xcode-select`
 `--uninstall`         | Uninstall. Takes no other options than `--no-dry-run` and will uninstall all versions of PHP etc.
 
 

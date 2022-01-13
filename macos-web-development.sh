@@ -10,7 +10,7 @@
 #  • MySQL
 #  • Dnsmasq
 #  • Apache
-#  • PHP versions 5.6 to 7.4
+#  • PHP versions 5.6 to 8.0
 #  • sphp – a PHP switcher script
 
 
@@ -35,6 +35,7 @@ PHP_7_1=true
 PHP_7_2=true
 PHP_7_3=true
 PHP_7_4=true
+PHP_8_0=true
 PHP_ENABLE=true
 PRESET_COMMON=false
 PRESET_MINIMAL=false
@@ -56,6 +57,7 @@ do
     --no-php-7-2)         PHP_7_2=false ;;
     --no-php-7-3)         PHP_7_3=false ;;
     --no-php-7-4)         PHP_7_4=false ;;
+    --no-php-8-0)         PHP_8_0=false ;;
     --no-php-enable)      PHP_ENABLE=false ;;
     --no-xcode-select)    INSTALL_XCODE=false ;;
     --only-apache)        ONLY_APACHE=true ;;
@@ -106,7 +108,10 @@ C_EM="$C_BOLD_CYAN"
 if $PRESET_COMMON; then
     PHP_5_6=false
     PHP_7_0=false
-    PHP_7_4=false
+    PHP_7_1=false
+    PHP_7_2=false
+    PHP_7_3=false
+    PHP_8_0=false
     INSTALL_XCODE=false
 elif $PRESET_MINIMAL; then
     INSTALL_MYSQL=false
@@ -115,6 +120,7 @@ elif $PRESET_MINIMAL; then
     PHP_7_1=false
     PHP_7_3=false
     PHP_7_4=false
+    PHP_8_0=false
     INSTALL_XCODE=false
 elif $ONLY_APACHE; then
     INSTALL_DNSMASQ=false
@@ -177,6 +183,7 @@ if $HELP; then
     echo -e "${C_INFO}--no-php-7-2          ${C_EM}Skip PHP 7.2${C_0}"
     echo -e "${C_INFO}--no-php-7-3          ${C_EM}Skip PHP 7.3${C_0}"
     echo -e "${C_INFO}--no-php-7-4          ${C_EM}Skip PHP 7.4${C_0}"
+    echo -e "${C_INFO}--no-php-8-0          ${C_EM}Skip PHP 8.0${C_0}"
     echo -e "${C_INFO}--no-php-enable       ${C_EM}Will not enable the latest PHP version installed${C_0}"
     echo -e "${C_INFO}--no-xcode-select     ${C_EM}Skip xcode-select${C_0}"
     echo -e "${C_INFO}--only-apache         ${C_EM}Only install Apache${C_0}"
@@ -184,8 +191,8 @@ if $HELP; then
     echo -e "${C_INFO}--only-mysql          ${C_EM}Only install MySQL${C_0}"
     echo -e "${C_INFO}--only-php            ${C_EM}Only install PHP${C_0}"
     echo -e "${C_INFO}--only-xcode-select   ${C_EM}Only install xcode-select${C_0}"
-    echo -e "${C_INFO}--p-common            ${C_EM}Sets options ${C_0}--no-php-5-6 --no-php-7-0 --no--php-7-4 --no-xcode-select"
-    echo -e "${C_INFO}--p-minimal           ${C_EM}Sets options ${C_0}--no-mysql --no-php-5-6 --no-php-7-0 --no-php-7-1 --no-php-7-3 --no--php-7-4 --no-xcode-select"
+    echo -e "${C_INFO}--p-common            ${C_EM}Sets options ${C_0}--no-php-5-6 --no-php-7-0 --no--php-7-1 --no--php-7-2 --no--php-7-3 --no--php-8-0 --no-xcode-select"
+    echo -e "${C_INFO}--p-minimal           ${C_EM}Sets options ${C_0}--no-mysql --no-php-5-6 --no-php-7-0 --no-php-7-1 --no-php-7-3 --no--php-7-4 --no--php-8-0 --no-xcode-select"
     echo -e "${C_INFO}--uninstall           ${C_EM}Uninstall stuff, but leave some stuff${C_0}"
     echo ""
     exit
@@ -196,9 +203,18 @@ fi
 # Common variables.
 # ----------------------------------------------------------
 
+MACOS_VERSION="$(sw_vers -productVersion)"
+MACOS_VERSION_MAJOR="$(echo $MACOS_VERSION | awk -F. '{ print $1; }')"
+# Convert string to integer.
+MACOS_VERSION_MAJOR=$(($MACOS_VERSION_MAJOR))
+
 PWD=$(pwd)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 APACHE_PATH="/usr/local/etc/httpd"
+# Apache path for macOS > 11
+# if [ $MACOS_VERSION_MAJOR -gt 11 ]; then
+#     APACHE_PATH="/opt/homebrew/etc/httpd"
+# fi
 APACHE_PATH_CONF="$APACHE_PATH/httpd.conf"
 APACHE_PATH_CONF_EXISTS=false
 if [ -f "$APACHE_PATH_CONF" ]; then
@@ -212,21 +228,28 @@ PHP_INI_DEST="$PHP_INI_DIR/php.ini"
 PHP_LOG_DIR="/var/log/php"
 
 # Create list of PHP versions, based on options.
-ALL_PHP_VERSIONS=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4")
-ALL_PHP_FLAGS=($PHP_5_6 $PHP_7_0 $PHP_7_1 $PHP_7_2 $PHP_7_3 $PHP_7_4)
+ALL_PHP_VERSIONS=("5.6" "7.0" "7.1" "7.2" "7.3" "7.4" "8.0")
+ALL_PHP_FLAGS=($PHP_5_6 $PHP_7_0 $PHP_7_1 $PHP_7_2 $PHP_7_3 $PHP_7_4 $PHP_8_0)
 PHP_VERSIONS=()
 for i in "${!ALL_PHP_FLAGS[@]}"; do
     if ${ALL_PHP_FLAGS[$i]}; then
         PHP_VERSIONS+=("${ALL_PHP_VERSIONS[$i]}")
     fi
 done
-PHP_EXAMPLE_VERSION="7.2"
+PHP_EXAMPLE_VERSION="7.4"
 NUM_PHP_VERSIONS=${#PHP_VERSIONS[@]}
 if [ $NUM_PHP_VERSIONS -gt 0 ]; then
     LATEST_PHP_VERSION="${PHP_VERSIONS[$NUM_PHP_VERSIONS-1]}"
     PHP_EXAMPLE_VERSION="$LATEST_PHP_VERSION"
 fi
 
+# Use MariaDB instead of MySQL.
+MYSQL_PACKAGE="mariadb"
+MYSQL_DB_PATH="/usr/local/var"
+# MySQL database path for macOS > 11
+if [ $MACOS_VERSION_MAJOR -gt 11 ]; then
+    MYSQL_DB_PATH="/opt/homebrew/var"
+fi
 
 # ----------------------------------------------------------
 # Initial message for dry run.
@@ -276,7 +299,7 @@ do_uninstall () {
     # Stop running Apache
     echo -e "${C_1}Stopping potentially running Apache ...${C_0}"
     if ! $DRY_RUN; then
-        sudo apachectl -k stop
+        # sudo apachectl -k stop
         if ($HAS_BREW); then
             if $HAS_APACHE; then
                 brew services stop httpd
@@ -361,13 +384,13 @@ do_uninstall () {
 
     # MySQL
     if $HAS_BREW; then
-        if [[ -n "$(brew ls --versions "mysql")" ]]; then
+        if [[ -n "$(brew ls --versions "$MYSQL_PACKAGE")" ]]; then
             echo -e "${C_1}Uninstalling MySQL ...${C_0}"
             if ! $DRY_RUN; then
-                brew services stop mysql
-                brew uninstall mysql
+                brew services stop $MYSQL_PACKAGE
+                brew uninstall $MYSQL_PACKAGE
             fi
-            echo -e "${C_EM}Uninstalled package, but did not remove database files. Remove them with ${C_0}rm -rf /usr/local/var/mysql${C_EM} if desired."
+            echo -e "${C_EM}Uninstalled package, but did not remove database files. Remove them with ${C_0}rm -rf ${MYSQL_DB_PATH}/mysql${C_EM} if desired."
         else
             echo -e "${C_2}MySQL (via Homebrew) not installed.${C_0}"
         fi
@@ -437,7 +460,8 @@ do_homebrew () {
     if ! [ -x "$(command -v brew)" ]; then
         echo -e "${C_1}Installing Homebrew ...${C_0}"
         if ! $DRY_RUN; then
-            ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+            # ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         fi
     else
         echo -e "${C_2}Homebrew already installed.${C_0}"
@@ -526,11 +550,11 @@ do_libiconv () {
 # ----------------------------------------------------------
 
 do_mysql () {
-    if ! [ -x "$(command -v mysql)" ]; then
+    if ! [ -x "$(command -v $MYSQL_PACKAGE)" ]; then
         echo -e "${C_1}Installing MySQL ...${C_0}"
         if ! $DRY_RUN; then
-            brew install mysql
-            brew services start mysql
+            brew install $MYSQL_PACKAGE
+            brew services start $MYSQL_PACKAGE
         fi
     else
         echo -e "${C_2}MySQL already installed.${C_0}"
@@ -549,7 +573,8 @@ do_dnsmasq () {
             brew install dnsmasq
             cd $(brew --prefix); mkdir etc; echo 'address=/.test/127.0.0.1' > etc/dnsmasq.conf
             sudo cp -v $(brew --prefix dnsmasq)/homebrew.mxcl.dnsmasq.plist /Library/LaunchDaemons
-            sudo launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
+            # sudo launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
+            sudo brew services start dnsmasq
             sudo mkdir /etc/resolver
             sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
             cd $PWD
@@ -584,8 +609,8 @@ do_apache () {
         echo -e "${C_1}Installing Apache (via Homebrew) ...${C_0}"
         if ! $DRY_RUN; then
             brew install httpd
-            sudo apachectl -k start
-            sudo launchctl load -w /System/Library/LaunchDaemons/org.apache.httpd.plist
+            brew services start httpd
+            # sudo launchctl load -w /System/Library/LaunchDaemons/org.apache.httpd.plist
             if [ -f "$APACHE_PATH_CONF" ]; then
                 APACHE_PATH_CONF_EXISTS=true
             fi
@@ -672,7 +697,7 @@ do_apache () {
         # Restart Apache.
         echo -e "${C_1}Restarting Apache ...${C_0}"
         if ! $DRY_RUN; then
-            sudo apachectl -k restart
+            brew services restart httpd
         fi
     else
         echo -e "${C_2}Apache (via Homebrew) already installed.${C_0}"
@@ -773,7 +798,7 @@ do_php () {
         if ! $DRY_RUN; then
             sudo perl -i -0pe "s|^<IfModule dir_module>\n.*DirectoryIndex index.html\n</IfModule>|$APACHE_PHP_INJECT|mg" $APACHE_PATH_CONF
             echo -e "${C_1}Restarting Apache ...${C_0}"
-            sudo apachectl -k restart
+            brew services restart httpd
         # else
             # Disabled until I figure out how to print changed lines only with perl.
             # sudo perl -0pe "s|^<IfModule dir_module>\n.*DirectoryIndex index.html\n</IfModule>|$APACHE_PHP_INJECT|mg" $APACHE_PATH_CONF
@@ -823,7 +848,7 @@ do_php_enable () {
         # Restart Apache.
         echo -e "${C_1}Restarting Apache ...${C_0}"
         if ! $DRY_RUN; then
-            sudo apachectl -k restart
+            brew services restart httpd
         fi
     else
         echo -e "${C_2}Will not enable php$LATEST_PHP_VERSION${C_0}"
