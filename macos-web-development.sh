@@ -485,7 +485,7 @@ do_homebrew () {
     fi
 
     if $HAS_BREW; then
-        set_homebrew_prefix
+        set_homebrew_path
 
         HAS_BREW_SERVICES=false
         TAPS="$(brew tap)"
