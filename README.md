@@ -30,7 +30,7 @@ Because you want to manage your own stack of independent software, which you are
 ## Features
 
 - **Browse** `http://{any}.test` to visit `~/{user}/WebServer/sites/{any}/public` (fully customizable path).
-- **Switch** between PHP versions 5.6 to 7.4 using command `sphp {version}`, for example `sphp 7.2`.
+- **Switch** between PHP versions 5.6 to 7.4 using command `sphp {version}`, for example `sphp 8.1`.
 - **Distribute** Apache vhosts configuraton and PHP ini from template files in repository. Simply adjust them to your needs before installation... or not. 🙃
 - **Opt out** of software you don't want. For example `--no-mysql`.
 - **Dry run** – check which software is already installed etc. This is the default behaviour, use `--no-dry-run` to actually install stuff.
