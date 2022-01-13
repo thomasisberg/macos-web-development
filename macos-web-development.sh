@@ -210,17 +210,12 @@ MACOS_VERSION_MAJOR=$(($MACOS_VERSION_MAJOR))
 
 PWD=$(pwd)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-APACHE_PATH="/usr/local/etc/httpd"
-# Apache path for macOS > 11
-# if [ $MACOS_VERSION_MAJOR -gt 11 ]; then
-#     APACHE_PATH="/opt/homebrew/etc/httpd"
-# fi
-APACHE_PATH_CONF="$APACHE_PATH/httpd.conf"
-APACHE_PATH_CONF_EXISTS=false
-if [ -f "$APACHE_PATH_CONF" ]; then
-    APACHE_PATH_CONF_EXISTS=true
+
+HAS_BREW=false
+if [ -x "$(command -v brew)" ]; then
+    HAS_BREW=true
 fi
-APACHE_PATH_VHOSTS="$APACHE_PATH/extra/httpd-vhosts.conf"
+
 APACHE_LOG_DIR="/var/log/apache2"
 APACHE_INSTALLED=false
 PHP_INI_DIR="/usr/local/php"
@@ -244,12 +239,34 @@ if [ $NUM_PHP_VERSIONS -gt 0 ]; then
 fi
 
 # Use MariaDB instead of MySQL.
+# MYSQL_PACKAGE="mysql"
 MYSQL_PACKAGE="mariadb"
-MYSQL_DB_PATH="/usr/local/var"
-# MySQL database path for macOS > 11
-if [ $MACOS_VERSION_MAJOR -gt 11 ]; then
-    MYSQL_DB_PATH="/opt/homebrew/var"
-fi
+
+# Set Homebrew prefix (path) and related variables.
+set_homebrew_path
+
+
+# ----------------------------------------------------------
+# Set variables that depend on Homebrew prefix.
+# ----------------------------------------------------------
+
+set_homebrew_path () {
+    HOMEBREW_PATH="/usr/local"
+
+    if $HAS_BREW; then
+        HOMEBREW_PATH="$(brew --prefix)"
+    fi
+
+    APACHE_PATH="$HOMEBREW_PATH/etc/httpd"
+    APACHE_PATH_CONF="$APACHE_PATH/httpd.conf"
+    APACHE_PATH_CONF_EXISTS=false
+    if [ -f "$APACHE_PATH_CONF" ]; then
+        APACHE_PATH_CONF_EXISTS=true
+    fi
+    APACHE_PATH_VHOSTS="$APACHE_PATH/extra/httpd-vhosts.conf"
+
+    MYSQL_DB_PATH="$HOMEBREW_PATH/var"
+}
 
 # ----------------------------------------------------------
 # Initial message for dry run.
@@ -284,11 +301,6 @@ do_sudo () {
 # ----------------------------------------------------------
 
 do_uninstall () {
-    HAS_BREW=false
-    if [ -x "$(command -v brew)" ]; then
-        HAS_BREW=true
-    fi
-
     HAS_APACHE=false
     if [[ -n "$(brew ls --versions "httpd")" ]]; then
         HAS_APACHE=true
@@ -324,7 +336,7 @@ do_uninstall () {
                 echo -e "${C_1}Uninstalling php$php_version ...${C_0}"
                 if ! $DRY_RUN; then
                     brew uninstall "php@$php_version"
-                    sudo rm -rf /usr/local/etc/php/$php_version
+                    sudo rm -rf $HOMEBREW_PATH/etc/php/$php_version
                 fi
             else
                 echo -e "${C_2}php$php_version not installed.${C_0}"
@@ -370,12 +382,13 @@ do_uninstall () {
         if [[ -n "$(brew ls --versions "dnsmasq")" ]]; then
             echo -e "${C_1}Uninstalling Dnsmasq ...${C_0}"
             if ! $DRY_RUN; then
-                sudo launchctl unload -w /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist 2>/dev/null
-                sudo rm /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
+                # sudo launchctl unload -w /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist 2>/dev/null
+                # sudo rm /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
+                sudo brew services stop dnsmasq
                 sudo rm -rf /etc/resolver
-                sudo rm $(brew --prefix)/etc/dnsmasq.conf
+                sudo rm $HOMEBREW_PATH/etc/dnsmasq.conf
                 brew uninstall dnsmasq
-                sudo rm -rf /usr/local/var/run/dnsmasq
+                sudo rm -rf $HOMEBREW_PATH/var/run/dnsmasq
             fi
         else
             echo -e "${C_2}Dnsmasq (via Homebrew) not installed.${C_0}"
@@ -457,22 +470,23 @@ do_xcode () {
 # ----------------------------------------------------------
 
 do_homebrew () {
-    if ! [ -x "$(command -v brew)" ]; then
+    if ! $HAS_BREW; then
         echo -e "${C_1}Installing Homebrew ...${C_0}"
         if ! $DRY_RUN; then
             # ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
             /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+            if [ -x "$(command -v brew)" ]; then
+                HAS_BREW=true
+            fi
         fi
     else
         echo -e "${C_2}Homebrew already installed.${C_0}"
     fi
 
-    HAS_BREW=false
-    if [ -x "$(command -v brew)" ]; then
-        HAS_BREW=true
-    fi
-
     if $HAS_BREW; then
+        set_homebrew_prefix
+
         HAS_BREW_SERVICES=false
         TAPS="$(brew tap)"
         TAPS_LIST=($TAPS)
@@ -776,7 +790,7 @@ do_php () {
         else
             echo -e "${C_2}php$php_version already installed.${C_0}"
         fi
-        PHP_VERSION_INI_DIR="/usr/local/etc/php/$php_version/conf.d"
+        PHP_VERSION_INI_DIR="$HOMEBREW_PATH/etc/php/$php_version/conf.d"
         PHP_VERSION_INI_PATH="$PHP_VERSION_INI_DIR/macos-web-development.ini"
         if ! [ -f "$PHP_VERSION_INI_PATH" ]; then
             echo -e "${C_1}Installing PHP ini for php$php_version ...${C_0}"
