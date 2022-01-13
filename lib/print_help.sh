@@ -20,7 +20,7 @@ print_help ()
     echo ""
     echo -e "${C_1}By default ${C_EM}macos-web-development${C_1} performs a dry run and installs nothing. Use ${C_INFO}--no-dry-run${C_1} to actually do stuff.${C_0}"
     echo ""
-    echo -e "${C_1}After installation you can run ${C_0}sphp 7.2${C_1} to switch PHP version (use desired version). ${C_0}sphp${C_1} only works with Apache from Homebrew.${C_0}"
+    echo -e "${C_1}After installation you can run ${C_0}sphp 8.1${C_1} to switch PHP version (use desired version). ${C_0}sphp${C_1} only works with Apache from Homebrew.${C_0}"
     echo ""
     echo -e "${C_1}Options:${C_0}"
     echo -e "${C_INFO}-h, --help            ${C_EM}Display this help${C_0}"

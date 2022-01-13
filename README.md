@@ -62,10 +62,10 @@ The custom PHP ini file is installed as a symlink in each PHP version, pointing 
 ```
 
 
-#### Installation with selected versions of PHP and no MySQL
+#### Installation with selected version of PHP and no MySQL
 
 ```bash
-./macos-web-development.sh --no-php-5-6 --no-php-7-0 --no-php-7-4 --no-mysql --no-dry-run
+./macos-web-development.sh --only-php-7-4 --no-mysql --no-dry-run
 ```
 
 
@@ -73,7 +73,7 @@ The custom PHP ini file is installed as a symlink in each PHP version, pointing 
 
 ##### Common
 
-Installs mandatory stuff and **Apache**, **MySQL**, **PHP 7.1**, **7.2**, **7.3** and **Dnsmasq**.
+Installs mandatory stuff and **Apache**, **MySQL**, **PHP 7.4** and **Dnsmasq**.
 
 ```bash
 ./macos-web-development.sh --p-common --no-dry-run
@@ -81,7 +81,7 @@ Installs mandatory stuff and **Apache**, **MySQL**, **PHP 7.1**, **7.2**, **7.3*
 
 ##### Minimal
 
-Installs mandatory stuff and **Apache**, **PHP 7.2** and **Dnsmasq**. No **MySQL**.
+Installs mandatory stuff and **Apache**, **PHP 7.4** and **Dnsmasq**. No **MySQL**.
 
 ```bash
 ./macos-web-development.sh --p-minimal --no-dry-run
