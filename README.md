@@ -1,6 +1,6 @@
 # macos-web-development
 
-Installs MacOS web development AMP stack (Apache, MySQL and PHP).
+Installs macOS web development AMP stack (Apache, MySQL and PHP).
 
 
 ## Why macos-web-development?
@@ -30,7 +30,7 @@ Because you want to manage your own stack of independent software, which you are
 ## Features
 
 - **Browse** `http://{any}.test` to visit `~/{user}/WebServer/sites/{any}/public` (fully customizable path).
-- **Switch** between PHP versions 5.6 to 7.4 using command `sphp {version}`, for example `sphp 8.1`.
+- **Switch** between PHP versions 5.6 to 8.1 using command `sphp {version}`, for example `sphp 8.1`.
 - **Distribute** Apache vhosts configuraton and PHP ini from template files in repository. Simply adjust them to your needs before installation... or not. 🙃
 - **Opt out** of software you don't want. For example `--no-mysql`.
 - **Dry run** – check which software is already installed etc. This is the default behaviour, use `--no-dry-run` to actually install stuff.
@@ -132,6 +132,12 @@ All of the above will only be installed if not already on the machine. However, 
 ### Complementary installation
 
 Should you decide that you need PHP 7.4 after installation without it, just execute a new installation. Installed software will be left alone, and only the missing packages will be installed. This should also work with future releases of PHP, once they're implemented in this script.
+
+### To only install a new version of PHP (8.1 in this example)
+
+```bash
+./macos-web-development.sh --only-php --only-php-8-1 --no-dry-run
+```
 
 
 ## Options
