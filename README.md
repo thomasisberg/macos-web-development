@@ -131,7 +131,7 @@ All of the above will only be installed if not already on the machine. However, 
 
 ### Complementary installation
 
-Should you decide that you need some feature after installation without it, just execute a new installation. Installed software will be left alone, and only the missing packages will be installed.
+Should you decide that you need a specific feature after installation without it, just execute a new installation. Installed software will be left alone, and only the missing packages will be installed.
 
 #### To only install a new version of PHP (8.1 in this example)
 
