@@ -133,7 +133,7 @@ All of the above will only be installed if not already on the machine. However, 
 
 Should you decide that you need PHP 7.4 after installation without it, just execute a new installation. Installed software will be left alone, and only the missing packages will be installed. This should also work with future releases of PHP, once they're implemented in this script.
 
-### To only install a new version of PHP (8.1 in this example)
+#### To only install a new version of PHP (8.1 in this example)
 
 ```bash
 ./macos-web-development.sh --only-php --only-php-8-1 --no-dry-run
