@@ -189,7 +189,9 @@ Option                                    | D
 
 ### sphp
 
-Script by Andy Miller: [Easy Brew PHP version switching](https://gist.github.com/rhukster/f4c04f1bf59e0b74e335ee5d186a98e2)
+Original script by Andy Miller: [Easy Brew PHP version switching](https://gist.github.com/rhukster/f4c04f1bf59e0b74e335ee5d186a98e2)
+
+It has been slightly modified.
 
 
 ## Requirements
