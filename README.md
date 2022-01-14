@@ -190,7 +190,7 @@ Script by Andy Miller: [Easy Brew PHP version switching](https://gist.github.com
 
 ### MacOS
 
-- Successfully tested on a fresh installation of **macOS Monterey** *(12.1)*
-- Not tested on **macOS Big Sur** *(11.x)*
-- Successfully tested on a fresh installation of **macOS Catalina** *(10.15.3)*
-- Tested without success on **macOS Sierra** *(10.12.6)*.
+- **macOS Monterey** *(12.1)* – successfully tested.
+- **macOS Big Sur** *(11.x)* – not tested.
+- **macOS Catalina** *(10.15.3)* – successfully tested.
+- **macOS Sierra** *(10.12.6)* – tested without success.
