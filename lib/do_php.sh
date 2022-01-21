@@ -25,24 +25,40 @@ do_php ()
         echo -e "${C_2}PHP ini already installed. Will not overwrite.${C_0}"
     fi
 
-    # Enable deprecated Homebrew PHP packages.
-    if ! $HAS_BREW; then
-        echo -e "${C_1}Would enable deprecated Homebrew PHP packages if Homebrew was actually installed.${C_0}"
-    else
-        echo -e "${C_1}Enable deprecated Homebrew PHP packages ...${C_0}"
-        if ! $DRY_RUN; then
-            brew tap exolnet/homebrew-deprecated
-        fi
-    fi
+    local SHOULD_ENABLE_DEPRECATED_PHP=true
 
     # Install PHP versions.
     for php_version in ${PHP_VERSIONS[*]}; do
+
+        # Check if PHP version is deprectated in Homebrew.
+        local IS_DEPRECATED_PHP=false
+        if printf "%s\n" "${DEPRECATED_PHP_VERSIONS[@]}" | grep -Fxq "$php_version"; then
+            IS_DEPRECATED_PHP=true
+        fi
+
+        # Enable deprecated Homebrew PHP packages, using packages from shivammathur/php.
+        if [[ $IS_DEPRECATED_PHP && $SHOULD_ENABLE_DEPRECATED_PHP ]]; then
+            if ! $HAS_BREW; then
+                echo -e "${C_1}Would enable deprecated Homebrew PHP packages if Homebrew was actually installed.${C_0}"
+            else
+                echo -e "${C_1}Enable deprecated Homebrew PHP packages ...${C_0}"
+                if ! $DRY_RUN; then
+                    brew tap shivammathur/php
+                    SHOULD_ENABLE_DEPRECATED_PHP=false
+                fi
+            fi
+        fi
+
         if ! $HAS_BREW; then
             echo -e "${C_1}Would install php$php_version if Homebrew was actually installed.${C_0}"
         elif ! [[ -n "$(brew ls --versions "php@$php_version")" ]]; then
             echo -e "${C_1}Installing php$php_version ...${C_0}"
             if ! $DRY_RUN; then
-                brew install "php@$php_version"
+                local PHP_PACKAGE="php@$php_version"
+                if $IS_DEPRECATED; then
+                    PHP_PACKAGE="shivammathur/php/php@$php_version"
+                fi
+                brew install "$PHP_PACKAGE"
             fi
         else
             echo -e "${C_2}php$php_version already installed.${C_0}"
