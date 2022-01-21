@@ -109,14 +109,14 @@ do_php ()
     fi
 
     # Install sphp script.
-    if ! [ -x "$(command -v sphp)" ]; then
+    # if ! [ -x "$(command -v sphp)" ]; then
         echo -e "${C_1}Installing sphp ...${C_0}"
         if ! $DRY_RUN; then
             cp "$DIR/sphp.sh" /usr/local/bin/sphp
             chmod +x /usr/local/bin/sphp
             echo -e "${C_EM}Switch PHP version using for example ${C_0}sphp $PHP_EXAMPLE_VERSION"
         fi
-    else
-        echo -e "${C_2}sphp already installed.${C_0}"
-    fi
+    # else
+    #     echo -e "${C_2}sphp already installed.${C_0}"
+    # fi
 }
