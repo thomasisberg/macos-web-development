@@ -9,6 +9,10 @@ sudo rsync -av ./php.ini /usr/local/macos-web-development/
 sudo rsync -av ./README.md /usr/local/macos-web-development/
 sudo rsync -av ./sphp.sh /usr/local/macos-web-development/
 
+if ! [ -d /usr/local/bin ]; then
+    sudo mkdir /usr/local/bin
+fi
+
 if ! [ -L /usr/local/bin/macos-web-development ]; then
-    ln -s /usr/local/macos-web-development/macos-web-development.sh /usr/local/bin/macos-web-development
+    sudo ln -s /usr/local/macos-web-development/macos-web-development.sh /usr/local/bin/macos-web-development
 fi
