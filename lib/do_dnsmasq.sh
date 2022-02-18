@@ -10,10 +10,10 @@ do_dnsmasq ()
         echo -e "${C_1}Installing Dnsmasq ...${C_0}"
         if ! $DRY_RUN; then
             brew install dnsmasq
-            cd $(brew --prefix); mkdir etc; echo 'address=/.test/127.0.0.1' > etc/dnsmasq.conf
+            cd $(brew --prefix); mkdir -p etc; echo 'address=/.test/127.0.0.1' > etc/dnsmasq.conf
             sudo cp -v $(brew --prefix dnsmasq)/homebrew.mxcl.dnsmasq.plist /Library/LaunchDaemons
             # sudo launchctl load -w /Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist
-            sudo brew services start dnsmasq
+            brew services start dnsmasq
             sudo mkdir /etc/resolver
             sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/test'
             cd $PWD
