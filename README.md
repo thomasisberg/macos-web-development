@@ -72,6 +72,8 @@ You can always perform a new self installation to update macos-web-development (
 
 ## Usage
 
+Replace `./macos-web-delopment.sh` with `macos-web-delopment` in all exmples below if you have self installed macos-web-development.
+
 #### Full installation (dry run with info)
 
 ```bash
