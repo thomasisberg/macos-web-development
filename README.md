@@ -46,6 +46,22 @@ After installation the Apache vhosts configuration is found at `/usr/local/etc/h
 The custom PHP ini file is installed as a symlink in each PHP version, pointing to `/usr/local/php/php.ini`. One file for all PHP versions = enjoy. 🥳
 
 
+## Installing macos-web-development
+
+**macos-web-development** was originally not intended to be installed, and works fine by just executing `./macos-web-delopment.sh` from your downloaded repository. [See Usage below](#usage).
+
+If you install **macos-web-development** you can execute it from anywhere by replacing `./macos-web-delopment.sh` with `macos-web-delopment` in the [Usage](#usage) instructions below. This is primarily useful for [complementary installation](#complementary-installations).
+
+### How to install mnacos-web-development
+
+```bash
+./self-install
+```
+
+* Installs files at `/usr/local/macos-web-development/`.
+* Creates executable symlink `/usr/local/bin/macos-web-development` (should be in your `$PATH`).
+
+
 ## Usage
 
 #### Full installation (dry run with info)
