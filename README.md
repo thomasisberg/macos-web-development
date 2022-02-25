@@ -34,7 +34,7 @@ Because you want to manage your own stack of independent software, which you are
 - **Distribute** Apache vhosts configuraton and PHP ini from template files in repository. Simply adjust them to your needs before installation... or not. 🙃
 - **Opt out** of software you don't want. For example `--no-mysql`.
 - **Dry run** – check which software is already installed etc. This is the default behaviour, use `--no-dry-run` to actually install stuff.
-- **Uninstall** – removes most stuff, but not all. ☝️ See details below.
+- **Uninstall** – removes most stuff, but not all. ☝️ [See details below](#uninstallation-1).
 
 ### Apache configuration
 
