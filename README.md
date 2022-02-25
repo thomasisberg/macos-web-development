@@ -198,7 +198,7 @@ It has been slightly modified to work well with *macos-web-development*.
 
 ### macOS tests
 
-- **macOS Monterey** *(12.1)* – successfully tested
-- **macOS Big Sur** *(11.x)* – not tested
-- **macOS Catalina** *(10.15.3)* – successfully tested
-- **macOS Sierra** *(10.12.6)* – tested without success
+- **macOS Monterey** *(12.1)* – successfully tested.
+- ~~macOS Big Sur~~ *(11.x)* – **not tested**.
+- **macOS Catalina** *(10.15.3)* – successfully tested.
+- ~~**macOS Sierra~~ *(10.12.6)* – **tested without success**
