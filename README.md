@@ -52,7 +52,7 @@ The custom PHP ini file is installed as a symlink in each PHP version, pointing 
 
 If you install **macos-web-development** you can execute it from anywhere by replacing `./macos-web-delopment.sh` with `macos-web-delopment` in the Usage instructions below. This is primarily useful for future [complementary installations](#complementary-installation).
 
-### How to install macos-web-development
+### How to
 
 ```bash
 ./self-install
