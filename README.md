@@ -201,6 +201,8 @@ Option                                    | D
 `--only-xcode-select` | Only install Xcode command line tools.
 `--p-common`          | Common preset. Sets options `--only-php-7-4 --no-xcode-select`
 `--p-minimal`         | Minimal preset. Sets options `--no-mysql --only-php-7-4 --no-xcode-select`
+`--script-repo=`      | Used in combination with `--self-update`. Sets URI to repository if you want to override the default one. Primarily implemented to be able to self update even if the standard repository have been moved.
+`--self-update`       | Update macos-web-development to latest version. Takes no other options than `--script-repo` and `--no-dry-run`.
 `--uninstall`         | Uninstall. Takes no other options than `--no-dry-run` and will uninstall all versions of PHP etc.
 
 

@@ -35,6 +35,8 @@ PHP_8_1=true
 PHP_ENABLE=true
 PRESET_COMMON=false
 PRESET_MINIMAL=false
+SCRIPT_REPO="git@github.com:thomasisberg/macos-web-development.git"
+SELF_UPDATE=false
 UNINSTALL=false
 
 while test $# != 0
@@ -72,6 +74,8 @@ do
     --only-xcode-select)  ONLY_XCODE=true ;;
     --p-common)           PRESET_COMMON=true ;;
     --p-minimal)          PRESET_MINIMAL=true ;;
+    --script-repo=*)      SCRIPT_REPO="${1#*=}" ;;
+    --self-update)        SELF_UPDATE=true ;;
     --uninstall)          UNINSTALL=true ;;
     esac
     shift

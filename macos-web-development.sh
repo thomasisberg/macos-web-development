@@ -47,6 +47,17 @@ if $HELP; then
 fi
 
 
+do_dry_run_message
+do_sudo
+
+
+# Self update
+if $SELF_UPDATE; then
+    do_self_update
+    exit
+fi
+
+
 # Set common variables.
 set_variables
 
@@ -57,15 +68,11 @@ set_homebrew_path
 
 # Uninstall
 if $UNINSTALL; then
-    do_dry_run_message
-    do_sudo
     do_uninstall
     exit
 fi
 
 # Install
-do_dry_run_message
-do_sudo
 if $INSTALL_CXODE; then
     do_xcode
 fi

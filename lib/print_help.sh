@@ -54,6 +54,8 @@ print_help ()
     echo -e "${C_INFO}--only-xcode-select   ${C_EM}Only install xcode-select${C_0}"
     echo -e "${C_INFO}--p-common            ${C_EM}Sets options ${C_0}--only-php-7-4 --no-xcode-select"
     echo -e "${C_INFO}--p-minimal           ${C_EM}Sets options ${C_0}--no-mysql --only-php-7-4 --no-xcode-select"
+    echo -e "${C_INFO}--script-repo=        ${C_EM}Used in combination with ${C_0}--self-update${C_EM}. Sets URI to repository if you want to override the default one.${C_0}"
+    echo -e "${C_INFO}--self-update         ${C_EM}Update macos-web-development to latest version. Takes no other options than ${C_0}--script-repo${C_EM} and ${C_0}--no-dry-run${C_EM}.${C_0}"
     echo -e "${C_INFO}--uninstall           ${C_EM}Uninstall stuff, but leave some stuff${C_0}"
     echo ""
 }
