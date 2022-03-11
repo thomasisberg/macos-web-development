@@ -54,9 +54,13 @@ if [[ " ${php_array[*]} " == *"$php_version"* ]]; then
         php_linked="$(echo $php_executable_path | sed -E 's/^.*(php@[^\/]+).*$/\1/')"
 
         # Switch PHP version.
-        echo "Switching to $php_version"
-        brew unlink "$php_linked"
-        brew link --force "$php_version"
+        if [ $php_linked == $php_version ]; then
+            echo "You already use $php_version."
+        else
+            echo "Switching to $php_version"
+            brew unlink "$php_linked"
+            brew link --force "$php_version"
+        fi
 
         # Switch apache
         echo "Switching your apache conf"
