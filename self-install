@@ -16,3 +16,8 @@ fi
 if ! [ -L /usr/local/bin/macos-web-development ]; then
     sudo ln -s /usr/local/macos-web-development/macos-web-development.sh /usr/local/bin/macos-web-development
 fi
+
+cp "./sphp.sh" /usr/local/bin/sphp
+chmod +x /usr/local/bin/sphp
+
+echo "Installed 👍"
