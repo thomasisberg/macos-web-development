@@ -48,22 +48,45 @@ if [[ " ${php_array[*]} " == *"$php_version"* ]]; then
         # Require sudo
         echo "Acquire sudo ..."
         sudo echo "" > /dev/null
+        echo ""
 
-        php_executable="$(which php)"
-        php_executable_path="$(ls -la $php_executable)"
-        php_linked="$(echo $php_executable_path | sed -E 's/^.*(php@[^\/]+).*$/\1/')"
+        php_executable="$(command -v php)"
+        php_executable_path=""
+        php_linked=""
+        if [[ ! -z "$php_executable" ]]; then
+            php_executable_path="$(ls -la $php_executable)"
+        fi
+        if [[ ! -z "$php_executable_path" ]]; then
+            php_linked="$(echo "$php_executable_path" | sed -E 's#^.*/php(@[^/]+)?/.*$#php\1#')"
+            if [[ ! $php_linked =~ ^php(@[0-9]\.[0-9])?$ ]]; then
+                echo "Could not figure out current PHP version – it looks weird:"
+                echo "$php_linked"
+                echo "Please disable the current PHP version manually, by running:"
+                echo "brew unlink {php_version}"
+                echo "Then run this switcher again."
+                exit
+            fi
+        fi
 
         # Switch PHP version.
-        if [ $php_linked == $php_version ]; then
+        if [[ "$php_linked" == "$php_version" ]]; then
             echo "You already use $php_version."
         else
-            echo "Switching to $php_version"
-            brew unlink "$php_linked"
-            brew link --force "$php_version"
+            if [[ ! -z "$php_linked" ]]; then
+                echo "Disabling $php_linked ..."
+                brew unlink "$php_linked"
+                echo "Disabled $php_linked."
+                echo ""
+            fi
+
+            echo "Enabling $php_version ..."
+            brew link --force --overwrite "$php_version"
+            echo "Enabled $php_version."
+            echo ""
         fi
 
         # Switch apache
-        echo "Switching your apache conf"
+        echo "Configuring Apache ..."
 
         # Make sure all PHP modules are available and commented in Apache config.
         for j in ${php_array[@]}; do
@@ -96,14 +119,18 @@ $comment_apache_module_string\\
 
         # Activate (uncomment) the desired PHP module in Apache config.
         sudo sed -i.bak "s/\#LoadModule $php_module $apache_php_mod_path/LoadModule $php_module $apache_php_mod_path/g" $apache_conf_path
-        echo "Restarting apache"
-        # sudo apachectl -k restart
-        brew services restart httpd
 
-	echo ""
-        php -v
+        echo "Apache configured."
         echo ""
 
+        echo "Restarting Apache ..."
+        # sudo apachectl -k restart
+        brew services restart httpd
+        echo "Apache restarted."
+        echo ""
+
+        php -v
+        echo ""
         echo "All done!"
     else
         echo "Sorry, but $php_version is not installed via brew. Install by running: brew install $php_version"
