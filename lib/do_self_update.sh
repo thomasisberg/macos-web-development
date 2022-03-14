@@ -28,7 +28,9 @@ do_self_update ()
         if $DOWNLOADED || $DRY_RUN; then
             echo -e "${C_1}Installing ...${C_0}"
             if ! $DRY_RUN; then
+                cd $UPDATE_DIR
                 $UPDATE_DIR/self-install
+                cd $PWD
             fi
             echo -e "${C_INFO}Script installed.${C_0}"
         fi
