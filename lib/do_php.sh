@@ -37,32 +37,35 @@ do_php ()
         fi
 
         # Enable deprecated Homebrew PHP packages, using packages from shivammathur/php.
-        if [[ $IS_DEPRECATED_PHP && $SHOULD_ENABLE_DEPRECATED_PHP ]]; then
+        if [[ $IS_DEPRECATED_PHP == true && $SHOULD_ENABLE_DEPRECATED_PHP == true ]]; then
             if ! $HAS_BREW; then
                 echo -e "${C_1}Would enable deprecated Homebrew PHP packages if Homebrew was actually installed.${C_0}"
             else
                 echo -e "${C_1}Enable deprecated Homebrew PHP packages ...${C_0}"
                 if ! $DRY_RUN; then
-                    brew tap shivammathur/php
                     SHOULD_ENABLE_DEPRECATED_PHP=false
+                    brew tap shivammathur/php
                 fi
+                echo -e "${C_1}Deprecated Homebrew PHP packages enabled.${C_0}"
             fi
         fi
 
         if ! $HAS_BREW; then
             echo -e "${C_1}Would install php$php_version if Homebrew was actually installed.${C_0}"
         elif ! [[ -n "$(brew ls --versions "php@$php_version")" ]]; then
+            local PHP_PACKAGE="php@$php_version"
+            if $IS_DEPRECATED_PHP; then
+                PHP_PACKAGE="shivammathur/php/php@$php_version"
+            fi
             echo -e "${C_1}Installing php$php_version ...${C_0}"
             if ! $DRY_RUN; then
-                local PHP_PACKAGE="php@$php_version"
-                if $IS_DEPRECATED; then
-                    PHP_PACKAGE="shivammathur/php/php@$php_version"
-                fi
                 brew install "$PHP_PACKAGE"
             fi
         else
             echo -e "${C_2}php$php_version already installed.${C_0}"
         fi
+
+        # PHP ini.
         PHP_VERSION_INI_DIR="$HOMEBREW_PATH/etc/php/$php_version/conf.d"
         PHP_VERSION_INI_PATH="$PHP_VERSION_INI_DIR/macos-web-development.ini"
         if ! [ -f "$PHP_VERSION_INI_PATH" ]; then

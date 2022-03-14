@@ -41,7 +41,7 @@ set_variables ()
         NUM_PHP_VERSIONS=${#PHP_VERSIONS[@]}
     fi
 
-    DEPRECATED_PHP_VERSIONS=("5.6" "7.0" "7.1")
+    DEPRECATED_PHP_VERSIONS=("5.6" "7.0" "7.1", "7.2", "7.3")
 
     PHP_EXAMPLE_VERSION="7.4"
     if [ $NUM_PHP_VERSIONS -gt 0 ]; then
