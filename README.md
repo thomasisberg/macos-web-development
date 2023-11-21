@@ -99,7 +99,7 @@ Replace `./macos-web-delopment.sh` with `macos-web-delopment` in all code instru
 
 ##### Common
 
-Installs mandatory stuff and **Apache**, **MySQL**, **PHP 7.4** and **Dnsmasq**.
+Installs mandatory stuff and **Apache**, **MySQL**, **PHP 8.1** and **Dnsmasq**.
 
 ```bash
 ./macos-web-development.sh --p-common --no-dry-run
@@ -107,7 +107,7 @@ Installs mandatory stuff and **Apache**, **MySQL**, **PHP 7.4** and **Dnsmasq**.
 
 ##### Minimal
 
-Installs mandatory stuff and **Apache**, **PHP 7.4** and **Dnsmasq**. No **MySQL**.
+Installs mandatory stuff and **Apache**, **PHP 8.1** and **Dnsmasq**. No **MySQL**.
 
 ```bash
 ./macos-web-development.sh --p-minimal --no-dry-run
