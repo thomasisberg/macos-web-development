@@ -91,7 +91,7 @@ Replace `./macos-web-delopment.sh` with `macos-web-delopment` in all code instru
 #### Installation with selected version of PHP and no MySQL
 
 ```bash
-./macos-web-development.sh --only-php-7-4 --no-mysql --no-dry-run
+./macos-web-development.sh --only-php-8.2 --no-mysql --no-dry-run
 ```
 
 
