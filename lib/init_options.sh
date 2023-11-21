@@ -23,6 +23,7 @@ ONLY_PHP_7_3=false
 ONLY_PHP_7_4=false
 ONLY_PHP_8_0=false
 ONLY_PHP_8_1=false
+ONLY_PHP_8_2=false
 ONLY_XCODE=false
 PHP_5_6=true
 PHP_7_0=true
@@ -32,6 +33,7 @@ PHP_7_3=true
 PHP_7_4=true
 PHP_8_0=true
 PHP_8_1=true
+PHP_8_2=true
 PHP_ENABLE=true
 PRESET_COMMON=false
 PRESET_MINIMAL=false
@@ -71,6 +73,7 @@ do
     --only-php-7-4)       ONLY_PHP_7_4=true ;;
     --only-php-8-0)       ONLY_PHP_8_0=true ;;
     --only-php-8-1)       ONLY_PHP_8_1=true ;;
+    --only-php-8-2)       ONLY_PHP_8_2=true ;;
     --only-xcode-select)  ONLY_XCODE=true ;;
     --p-common)           PRESET_COMMON=true ;;
     --p-minimal)          PRESET_MINIMAL=true ;;
@@ -87,11 +90,11 @@ done
 # ----------------------------------------------------------
 
 if $PRESET_COMMON; then
-    ONLY_PHP_7_4=true
+    ONLY_PHP_8_1=true
     INSTALL_XCODE=false
 elif $PRESET_MINIMAL; then
     INSTALL_MYSQL=false
-    ONLY_PHP_7_4=true
+    ONLY_PHP_8_1=true
     INSTALL_XCODE=false
 elif $ONLY_APACHE; then
     INSTALL_DNSMASQ=false

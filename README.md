@@ -159,10 +159,10 @@ All of the above will only be installed if not already on the machine. However, 
 
 Should you decide that you need a specific feature after installation without it, just execute a new installation. Installed software will be left alone, and only the missing packages will be installed.
 
-#### To only install a new version of PHP (8.1 in this example)
+#### To only install a new version of PHP (8.2 in this example)
 
 ```bash
-./macos-web-development.sh --only-php --only-php-8-1 --no-dry-run
+./macos-web-development.sh --only-php --only-php-8-2 --no-dry-run
 ```
 
 
@@ -184,6 +184,7 @@ Option                                    | D
 `--no-php-7-4`        | Skip PHP 7.4
 `--no-php-8-0`        | Skip PHP 8.0
 `--no-php-8-1`        | Skip PHP 8.1
+`--no-php-8-2`        | Skip PHP 8.2
 `--no-php-enable`     | Don't automatically enable the latest version of PHP in currently executing installation.
 `--no-xcode-select`   | Skip Xcode command line developer tools.
 `--only-apache`       | Only install Apache.
@@ -198,9 +199,10 @@ Option                                    | D
 `--only-php-7-4`      | Only install PHP 7.4. Combine with `--only-php` if desired.
 `--only-php-8-0`      | Only install PHP 8.0. Combine with `--only-php` if desired.
 `--only-php-8-1`      | Only install PHP 8.1. Combine with `--only-php` if desired.
+`--only-php-8-2`      | Only install PHP 8.2. Combine with `--only-php` if desired.
 `--only-xcode-select` | Only install Xcode command line tools.
-`--p-common`          | Common preset. Sets options `--only-php-7-4 --no-xcode-select`
-`--p-minimal`         | Minimal preset. Sets options `--no-mysql --only-php-7-4 --no-xcode-select`
+`--p-common`          | Common preset. Sets options `--only-php-8-1 --no-xcode-select`
+`--p-minimal`         | Minimal preset. Sets options `--no-mysql --only-php-8-1 --no-xcode-select`
 `--script-repo=`      | Used in combination with `--self-update`. Sets URI to repository if you want to override the default one. Primarily implemented to be able to self update even if the standard repository have been moved.
 `--self-update`       | Update macos-web-development to latest version. Takes no other options than `--script-repo` and `--no-dry-run`.
 `--uninstall`         | Uninstall. Takes no other options than `--no-dry-run` and will uninstall all versions of PHP etc.
