@@ -30,7 +30,7 @@ Because you want to manage your own stack of independent software, which you are
 ## Features
 
 - **Browse** `http://{any}.test` to visit `~/{user}/WebServer/sites/{any}/public` (fully customizable path).
-- **Switch** between PHP versions 5.6 to 8.1 using command `sphp {version}`, for example `sphp 8.1`.
+- **Switch** between PHP versions 5.6 to 8.4 using command `sphp {version}`, for example `sphp 8.4`.
 - **Distribute** Apache vhosts configuraton and PHP ini from template files in repository. Simply adjust them to your needs before installation... or not. 🙃
 - **Opt out** of software you don't want. For example `--no-mysql`.
 - **Dry run** – check which software is already installed etc. This is the default behaviour, use `--no-dry-run` to actually install stuff.
@@ -99,7 +99,7 @@ Replace `./macos-web-delopment.sh` with `macos-web-delopment` in all code instru
 
 ##### Common
 
-Installs mandatory stuff and **Apache**, **MySQL**, **PHP 8.1** and **Dnsmasq**.
+Installs mandatory stuff and **Apache**, **MySQL**, **PHP 8.3** and **Dnsmasq**.
 
 ```bash
 ./macos-web-development.sh --p-common --no-dry-run
@@ -107,7 +107,7 @@ Installs mandatory stuff and **Apache**, **MySQL**, **PHP 8.1** and **Dnsmasq**.
 
 ##### Minimal
 
-Installs mandatory stuff and **Apache**, **PHP 8.1** and **Dnsmasq**. No **MySQL**.
+Installs mandatory stuff and **Apache**, **PHP 8.3** and **Dnsmasq**. No **MySQL**.
 
 ```bash
 ./macos-web-development.sh --p-minimal --no-dry-run

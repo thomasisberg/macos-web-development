@@ -9,7 +9,7 @@
 #  • MySQL
 #  • Dnsmasq
 #  • Apache
-#  • PHP versions 5.6 to 8.1
+#  • PHP versions 5.6 to 8.4
 #  • sphp – a PHP switcher script
 # ----------------------------------------------------------
 
