@@ -16,7 +16,23 @@ brew_prefix_escaped=$(echo "$brew_prefix" | sed 's#/#\\\/#g')
 
 brew_array=("5.6","7.0","7.1","7.2","7.3","7.4","8.0","8.1","8.2","8.3","8.4","8.5")
 php_array=("php@5.6" "php@7.0" "php@7.1" "php@7.2" "php@7.3" "php@7.4" "php@8.0" "php@8.1" "php@8.2" "php@8.3" "php@8.4" "php@8.5")
-php_version="php@$1"
+
+# The newest PHP release is shipped as the unversioned `php` formula; `php@X.Y`
+# is only an alias to it until a newer release becomes the latest. Resolve a
+# `php@X.Y` name to the real formula so linking and the Apache module path are
+# correct. `brew info` reports the canonical name on its first line.
+resolve_php_formula() {
+    local resolved
+    resolved="$(brew info "$1" 2>/dev/null | sed -n '1s/^==> \([^:]*\):.*/\1/p')"
+    if [[ -n "$resolved" ]]; then
+        echo "$resolved"
+    else
+        echo "$1"
+    fi
+}
+
+php_version_arg="php@$1"
+php_version="$php_version_arg"
 php_version_numeric=$(echo "$php_version" | sed 's/^php@//' | sed 's/\.//')
 php_opt_path="$brew_prefix_escaped\/opt\/"
 
@@ -39,10 +55,13 @@ elif [[ $php_version_numeric -ge 70 ]]; then
 fi
 
 apache_conf_path="$brew_prefix/etc/httpd/httpd.conf"
+
+# Resolve to the real formula name (e.g. the latest version is plain `php`).
+php_version="$(resolve_php_formula "$php_version_arg")"
 apache_php_mod_path="$php_opt_path$php_version$apache_php_lib_path"
 
 # Check that the requested version is supported.
-if [[ " ${php_array[*]} " == *"$php_version"* ]]; then
+if [[ " ${php_array[*]} " == *"$php_version_arg"* ]]; then
     # Check that the requested version is installed.
     if [[ -n "$(brew ls --versions "$php_version")" ]]; then
         # Require sudo
@@ -100,7 +119,8 @@ if [[ " ${php_array[*]} " == *"$php_version"* ]]; then
                 loop_php_module="$php7_module"
                 loop_apache_php_lib_path="$apache_php7_lib_path"
             fi
-            apache_module_string="LoadModule $loop_php_module $php_opt_path$j$loop_apache_php_lib_path"
+            loop_formula="$(resolve_php_formula "$j")"
+            apache_module_string="LoadModule $loop_php_module $php_opt_path$loop_formula$loop_apache_php_lib_path"
             comment_apache_module_string="#$apache_module_string"
 
             # If apache module string within apache conf

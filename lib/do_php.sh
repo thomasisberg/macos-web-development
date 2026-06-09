@@ -50,19 +50,43 @@ do_php ()
             fi
         fi
 
+        local PHP_PACKAGE="php@$php_version"
+        if $IS_DEPRECATED_PHP; then
+            PHP_PACKAGE="shivammathur/php/php@$php_version"
+        fi
+
         if ! $HAS_BREW; then
             echo -e "${C_1}Would install php$php_version if Homebrew was actually installed.${C_0}"
-        elif ! [[ -n "$(brew ls --versions "php@$php_version")" ]]; then
-            local PHP_PACKAGE="php@$php_version"
-            if $IS_DEPRECATED_PHP; then
-                PHP_PACKAGE="shivammathur/php/php@$php_version"
-            fi
-            echo -e "${C_1}Installing php$php_version ...${C_0}"
-            if ! $DRY_RUN; then
-                brew install "$PHP_PACKAGE"
-            fi
         else
-            echo -e "${C_2}php$php_version already installed.${C_0}"
+            # Resolve the real Homebrew formula name. The newest PHP release is
+            # shipped as the unversioned `php` formula; `php@X.Y` is only an alias
+            # to it until a newer release becomes the latest. `brew info` reports
+            # the canonical formula name on its first line.
+            local CANONICAL_PACKAGE
+            CANONICAL_PACKAGE="$(brew info "$PHP_PACKAGE" 2>/dev/null | sed -n '1s/^==> \([^:]*\):.*/\1/p')"
+            if [ -n "$CANONICAL_PACKAGE" ]; then
+                PHP_PACKAGE="$CANONICAL_PACKAGE"
+            fi
+
+            # Is the requested major.minor version actually installed for that
+            # formula? (Plain `php` may be installed but at an older version.)
+            local INSTALLED_VERSIONS
+            INSTALLED_VERSIONS="$(brew ls --versions "$PHP_PACKAGE" 2>/dev/null)"
+            if echo "$INSTALLED_VERSIONS" | grep -qE "(^| )$php_version\."; then
+                echo -e "${C_2}php$php_version already installed.${C_0}"
+            elif [ -n "$INSTALLED_VERSIONS" ]; then
+                # Formula present but at a different version – happens when the
+                # latest PHP is the unversioned `php` formula and it is outdated.
+                echo -e "${C_1}Upgrading $PHP_PACKAGE to php$php_version ...${C_0}"
+                if ! $DRY_RUN; then
+                    brew upgrade "$PHP_PACKAGE"
+                fi
+            else
+                echo -e "${C_1}Installing php$php_version ($PHP_PACKAGE) ...${C_0}"
+                if ! $DRY_RUN; then
+                    brew install "$PHP_PACKAGE"
+                fi
+            fi
         fi
 
         # PHP ini.
@@ -72,7 +96,7 @@ do_php ()
             echo -e "${C_1}Installing PHP ini for php$php_version ...${C_0}"
             if ! $DRY_RUN; then
                 if ! [ -d "$PHP_VERSION_INI_DIR" ]; then
-                    mkdir "$PHP_VERSION_INI_DIR"
+                    mkdir -p "$PHP_VERSION_INI_DIR"
                 fi
                 ln -s $PHP_INI_DEST "$PHP_VERSION_INI_PATH"
             fi
