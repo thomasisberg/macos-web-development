@@ -185,6 +185,9 @@ Option                                    | D
 `--no-php-8-0`        | Skip PHP 8.0
 `--no-php-8-1`        | Skip PHP 8.1
 `--no-php-8-2`        | Skip PHP 8.2
+`--no-php-8-3`        | Skip PHP 8.3
+`--no-php-8-4`        | Skip PHP 8.4
+`--no-php-8-5`        | Skip PHP 8.5
 `--no-php-enable`     | Don't automatically enable the latest version of PHP in currently executing installation.
 `--no-xcode-select`   | Skip Xcode command line developer tools.
 `--only-apache`       | Only install Apache.
@@ -200,6 +203,9 @@ Option                                    | D
 `--only-php-8-0`      | Only install PHP 8.0. Combine with `--only-php` if desired.
 `--only-php-8-1`      | Only install PHP 8.1. Combine with `--only-php` if desired.
 `--only-php-8-2`      | Only install PHP 8.2. Combine with `--only-php` if desired.
+`--only-php-8-3`      | Only install PHP 8.3. Combine with `--only-php` if desired.
+`--only-php-8-4`      | Only install PHP 8.4. Combine with `--only-php` if desired.
+`--only-php-8-5`      | Only install PHP 8.5. Combine with `--only-php` if desired.
 `--only-xcode-select` | Only install Xcode command line tools.
 `--p-common`          | Common preset. Sets options `--only-php-8-1 --no-xcode-select`
 `--p-minimal`         | Minimal preset. Sets options `--no-mysql --only-php-8-1 --no-xcode-select`
