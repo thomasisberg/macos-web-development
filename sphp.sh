@@ -64,10 +64,9 @@ apache_php_mod_path="$php_opt_path$php_version$apache_php_lib_path"
 if [[ " ${php_array[*]} " == *"$php_version_arg"* ]]; then
     # Check that the requested version is installed.
     if [[ -n "$(brew ls --versions "$php_version")" ]]; then
-        # Require sudo
-        echo "Acquire sudo ..."
-        sudo echo "" > /dev/null
-        echo ""
+        # Note: the Homebrew prefix (including httpd.conf) is owned by the
+        # current user, so none of the steps below need sudo. Avoiding sudo
+        # keeps the switcher from prompting for a password repeatedly.
 
         php_executable="$(command -v php)"
         php_executable_path=""
@@ -127,18 +126,18 @@ if [[ " ${php_array[*]} " == *"$php_version_arg"* ]]; then
             if grep -q "$apache_module_string" "$apache_conf_path"; then
                 # If apache module string not commented out already
                 if ! grep -q "$comment_apache_module_string" "$apache_conf_path"; then
-                    sudo sed -i.bak "s/$apache_module_string/$comment_apache_module_string/g" $apache_conf_path
+                    sed -i.bak "s/$apache_module_string/$comment_apache_module_string/g" $apache_conf_path
                 fi
             # Else the string for the php module is not in the apache config then add it
             else
-                sudo sed -i.bak "/LoadModule rewrite_module lib\/httpd\/modules\/mod_rewrite.so/a\\
+                sed -i.bak "/LoadModule rewrite_module lib\/httpd\/modules\/mod_rewrite.so/a\\
 $comment_apache_module_string\\
 " $apache_conf_path
             fi
         done
 
         # Activate (uncomment) the desired PHP module in Apache config.
-        sudo sed -i.bak "s/\#LoadModule $php_module $apache_php_mod_path/LoadModule $php_module $apache_php_mod_path/g" $apache_conf_path
+        sed -i.bak "s/\#LoadModule $php_module $apache_php_mod_path/LoadModule $php_module $apache_php_mod_path/g" $apache_conf_path
 
         echo "Apache configured."
         echo ""
