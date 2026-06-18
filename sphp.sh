@@ -58,7 +58,8 @@ apache_conf_path="$brew_prefix/etc/httpd/httpd.conf"
 
 # Resolve to the real formula name (e.g. the latest version is plain `php`).
 php_version="$(resolve_php_formula "$php_version_arg")"
-apache_php_mod_path="$php_opt_path$php_version$apache_php_lib_path"
+php_version_escaped=$(echo "$php_version" | sed 's#/#\\/#g')
+apache_php_mod_path="$php_opt_path$php_version_escaped$apache_php_lib_path"
 
 # Check that the requested version is supported.
 if [[ " ${php_array[*]} " == *"$php_version_arg"* ]]; then
@@ -119,7 +120,8 @@ if [[ " ${php_array[*]} " == *"$php_version_arg"* ]]; then
                 loop_apache_php_lib_path="$apache_php7_lib_path"
             fi
             loop_formula="$(resolve_php_formula "$j")"
-            apache_module_string="LoadModule $loop_php_module $php_opt_path$loop_formula$loop_apache_php_lib_path"
+            loop_formula_escaped=$(echo "$loop_formula" | sed 's#/#\\/#g')
+            apache_module_string="LoadModule $loop_php_module $php_opt_path$loop_formula_escaped$loop_apache_php_lib_path"
             comment_apache_module_string="#$apache_module_string"
 
             # If apache module string within apache conf
