@@ -25,7 +25,9 @@ resolve_php_formula() {
     local resolved
     resolved="$(brew info "$1" 2>/dev/null | sed -n '1s/^==> \([^:]*\):.*/\1/p')"
     if [[ -n "$resolved" ]]; then
-        echo "$resolved"
+        # Strip tap prefix (e.g. "shivammathur/php/php@7.4" -> "php@7.4").
+        # Homebrew opt/ symlinks always use just the formula name, not the tap path.
+        echo "${resolved##*/}"
     else
         echo "$1"
     fi
@@ -99,6 +101,10 @@ if [[ " ${php_array[*]} " == *"$php_version_arg"* ]]; then
             fi
 
             echo "Enabling $php_version ..."
+            # Homebrew requires explicit trust for third-party taps before loading formulas.
+            if brew tap 2>/dev/null | grep -q "shivammathur/php"; then
+                brew trust shivammathur/php 2>/dev/null || true
+            fi
             brew link --force --overwrite "$php_version"
             echo "Enabled $php_version."
             echo ""
